@@ -1,13 +1,13 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { MapPin, Upload, Camera, Share, CheckCircle, Loader2, QrCode, Check, Users } from 'lucide-react';
+import { MapPin, Upload, Camera, Share, CheckCircle, Loader2, QrCode, Check, Users, X } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 
 export type TaskType = 
   | 'visit_location' 
@@ -747,7 +747,6 @@ export const GroupActivityTask: React.FC<GroupActivityTaskProps> = ({
   );
 };
 
-// Helper component to render the appropriate task component based on task type
 interface TaskComponentProps {
   type: TaskType;
   taskData: any;
