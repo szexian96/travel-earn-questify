@@ -8,8 +8,8 @@ import StoryCard, { Story } from '@/components/StoryCard';
 const mockStories: Story[] = [
   {
     id: '1',
-    title: 'The Legend of Kyoto's Hidden Temples',
-    description: 'Discover the ancient secrets of Kyoto's most mysterious shrines and the legends that surround them.',
+    title: "The Legend of Kyoto's Hidden Temples",
+    description: "Discover the ancient secrets of Kyoto's most mysterious shrines and the legends that surround them.",
     thumbnail: 'https://images.unsplash.com/photo-1598890777032-bde835a53f66?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     isUnlocked: true,
     chapters: {
@@ -22,7 +22,7 @@ const mockStories: Story[] = [
   {
     id: '2',
     title: 'Tokyo After Dark: Neon Dreams',
-    description: 'Experience the electric nightlife of Tokyo, from Shibuya's crossing to the hidden izakayas of Shinjuku.',
+    description: "Experience the electric nightlife of Tokyo, from Shibuya's crossing to the hidden izakayas of Shinjuku.",
     thumbnail: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1071&q=80',
     isUnlocked: true,
     chapters: {

@@ -58,7 +58,7 @@ const mockTouristSpots: TouristSpot[] = [
   {
     id: 'spot-3',
     name: 'Gion District',
-    description: 'Kyoto's most famous geisha district filled with traditional wooden machiya houses, teahouses, and restaurants.',
+    description: "Kyoto's most famous geisha district filled with traditional wooden machiya houses, teahouses, and restaurants.",
     thumbnail: 'https://images.unsplash.com/photo-1493997181344-712f2f19d87a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     location: 'Gion, Kyoto',
     estimatedDuration: '3 hours',
@@ -92,7 +92,7 @@ const mockTouristSpots: TouristSpot[] = [
   {
     id: 'spot-5',
     name: 'Nishiki Market',
-    description: 'Known as "Kyoto's Kitchen," this lively market street is filled with food vendors and traditional shops.',
+    description: 'Known as "Kyoto\'s Kitchen," this lively market street is filled with food vendors and traditional shops.',
     thumbnail: 'https://images.unsplash.com/photo-1610308479130-5141d71ba6e3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
     location: 'Central Kyoto',
     estimatedDuration: '2 hours',
@@ -111,7 +111,7 @@ const mockTouristSpots: TouristSpot[] = [
 const mockRouteDetails = {
   id: 'kyoto-1',
   title: 'Kyoto Cultural Tour',
-  description: 'Immerse yourself in the rich cultural heritage of Kyoto, Japan's ancient capital. This route takes you through historic temples, traditional districts, and culinary highlights that showcase the essence of Japanese tradition and beauty.',
+  description: "Immerse yourself in the rich cultural heritage of Kyoto, Japan's ancient capital. This route takes you through historic temples, traditional districts, and culinary highlights that showcase the essence of Japanese tradition and beauty.",
   thumbnail: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
   location: 'Kyoto, Japan',
   duration: '3 days',

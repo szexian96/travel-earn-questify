@@ -26,7 +26,7 @@ const mockRoutes: ModelRoute[] = [
   {
     id: 'tokyo-1',
     title: 'Tokyo City Explorer',
-    description: 'From ancient temples to futuristic skyscrapers, experience the dynamic contrasts of Japan's capital.',
+    description: "From ancient temples to futuristic skyscrapers, experience the dynamic contrasts of Japan's capital.",
     thumbnail: 'https://images.unsplash.com/photo-1532236204992-f5e85c024202?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1202&q=80',
     location: 'Tokyo, Japan',
     duration: '4 days',

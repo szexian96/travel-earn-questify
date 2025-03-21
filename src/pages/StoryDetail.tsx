@@ -29,7 +29,7 @@ const mockStoryChapters = [
   },
   {
     id: 'chapter-2',
-    title: 'Kiyomizu's Pure Waters',
+    title: "Kiyomizu's Pure Waters",
     content: `
       <p>The wooden veranda of Kiyomizu-dera stretched out before Akiko like an ancient ship sailing through a sea of maple trees. From this vantage point, all of Kyoto was laid out beneath her, a patchwork of tradition and modernity.</p>
       
@@ -68,8 +68,8 @@ const mockStoryChapters = [
 // Mock story data
 const mockStoryDetails = {
   id: '1',
-  title: 'The Legend of Kyoto's Hidden Temples',
-  description: 'Discover the ancient secrets of Kyoto's most mysterious shrines and the legends that surround them.',
+  title: "The Legend of Kyoto's Hidden Temples",
+  description: "Discover the ancient secrets of Kyoto's most mysterious shrines and the legends that surround them.",
   thumbnail: 'https://images.unsplash.com/photo-1598890777032-bde835a53f66?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
   chapters: {
     total: 5,
