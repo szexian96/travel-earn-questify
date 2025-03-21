@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -13,7 +13,10 @@ import {
   Menu, 
   X, 
   ChevronDown,
-  Sparkles
+  Sparkles,
+  ScrollText,
+  Compass,
+  Shield
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -22,10 +25,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from '@/hooks/use-toast';
 
 const Navbar: React.FC = () => {
   const { user, logout, isAuthenticated } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -41,6 +47,17 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out",
+    });
+    navigate('/');
+  };
+
+  const isAdmin = user?.username === 'admin' || user?.email === 'admin@questify.com';
 
   return (
     <header 
@@ -80,12 +97,20 @@ const Navbar: React.FC = () => {
               Quests
             </Link>
             <Link 
-              to="/rewards"
+              to="/stories"
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname.includes('/rewards') ? 'text-primary' : 'text-foreground/80'
+                location.pathname.includes('/stories') ? 'text-primary' : 'text-foreground/80'
               }`}
             >
-              Rewards
+              Stories
+            </Link>
+            <Link 
+              to="/routes"
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                location.pathname.includes('/routes') ? 'text-primary' : 'text-foreground/80'
+              }`}
+            >
+              Routes
             </Link>
             <Link 
               to="/explore"
@@ -95,6 +120,16 @@ const Navbar: React.FC = () => {
             >
               Explore
             </Link>
+            {isAdmin && (
+              <Link 
+                to="/admin"
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  location.pathname.includes('/admin') ? 'text-primary' : 'text-foreground/80'
+                }`}
+              >
+                Admin
+              </Link>
+            )}
           </nav>
 
           {/* Auth Buttons / User Menu */}
@@ -134,15 +169,23 @@ const Navbar: React.FC = () => {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/rewards" className="flex cursor-pointer items-center">
-                      <Trophy className="mr-2 h-4 w-4" />
-                      <span>Rewards</span>
+                    <Link to="/passport" className="flex cursor-pointer items-center">
+                      <ScrollText className="mr-2 h-4 w-4" />
+                      <span>Passport</span>
                     </Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="flex cursor-pointer items-center">
+                        <Shield className="mr-2 h-4 w-4" />
+                        <span>Admin Panel</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     className="flex cursor-pointer items-center text-red-500 focus:text-red-500"
-                    onClick={logout}
+                    onClick={handleLogout}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Logout</span>
@@ -200,14 +243,36 @@ const Navbar: React.FC = () => {
                 </div>
               </Link>
               <Link 
-                to="/rewards"
+                to="/stories"
                 className={`p-2 rounded-md text-sm font-medium transition-colors hover:bg-secondary ${
-                  location.pathname.includes('/rewards') ? 'text-primary' : 'text-foreground/80'
+                  location.pathname.includes('/stories') ? 'text-primary' : 'text-foreground/80'
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  <ScrollText className="h-5 w-5" />
+                  <span>Stories</span>
+                </div>
+              </Link>
+              <Link 
+                to="/routes"
+                className={`p-2 rounded-md text-sm font-medium transition-colors hover:bg-secondary ${
+                  location.pathname.includes('/routes') ? 'text-primary' : 'text-foreground/80'
                 }`}
               >
                 <div className="flex items-center space-x-3">
                   <Trophy className="h-5 w-5" />
-                  <span>Rewards</span>
+                  <span>Routes</span>
+                </div>
+              </Link>
+              <Link 
+                to="/explore"
+                className={`p-2 rounded-md text-sm font-medium transition-colors hover:bg-secondary ${
+                  location.pathname.includes('/explore') ? 'text-primary' : 'text-foreground/80'
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  <Compass className="h-5 w-5" />
+                  <span>Explore</span>
                 </div>
               </Link>
               {isAuthenticated && (
@@ -220,6 +285,19 @@ const Navbar: React.FC = () => {
                   <div className="flex items-center space-x-3">
                     <User className="h-5 w-5" />
                     <span>Profile</span>
+                  </div>
+                </Link>
+              )}
+              {isAdmin && (
+                <Link 
+                  to="/admin"
+                  className={`p-2 rounded-md text-sm font-medium transition-colors hover:bg-secondary ${
+                    location.pathname.includes('/admin') ? 'text-primary' : 'text-foreground/80'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Shield className="h-5 w-5" />
+                    <span>Admin Panel</span>
                   </div>
                 </Link>
               )}

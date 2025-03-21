@@ -18,6 +18,8 @@ import StoryDetail from "./pages/StoryDetail";
 import ModelRoutes from "./pages/ModelRoutes";
 import ModelRouteDetails from "./pages/ModelRouteDetails";
 import Passport from "./pages/Passport";
+import Explore from "./pages/Explore";
+import AdminPanel from "./pages/admin/AdminPanel";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,8 @@ const App = () => (
               <Route path="/routes" element={<ModelRoutes />} />
               <Route path="/routes/:id" element={<ModelRouteDetails />} />
               <Route path="/passport" element={<Passport />} />
+              <Route path="/explore" element={<Explore />} />
+              <Route path="/admin/*" element={<AdminPanel />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
