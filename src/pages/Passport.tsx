@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Stamp, Award, Map, Clock, CalendarDays } from 'lucide-react';
+import { Stamp, Award, Map, Clock, CalendarDays, MapPin, BookOpen, Check } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DigitalPassport, { HankoStamp } from '@/components/DigitalPassport';
 import { Button } from '@/components/ui/button';
