@@ -120,6 +120,16 @@ const Navbar: React.FC = () => {
             >
               Explore
             </Link>
+            {isAuthenticated && (
+              <Link 
+                to="/passport"
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  location.pathname.includes('/passport') ? 'text-primary' : 'text-foreground/80'
+                }`}
+              >
+                Passport
+              </Link>
+            )}
             {isAdmin && (
               <Link 
                 to="/admin"
@@ -276,17 +286,30 @@ const Navbar: React.FC = () => {
                 </div>
               </Link>
               {isAuthenticated && (
-                <Link 
-                  to="/profile"
-                  className={`p-2 rounded-md text-sm font-medium transition-colors hover:bg-secondary ${
-                    location.pathname.includes('/profile') ? 'text-primary' : 'text-foreground/80'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <User className="h-5 w-5" />
-                    <span>Profile</span>
-                  </div>
-                </Link>
+                <>
+                  <Link 
+                    to="/profile"
+                    className={`p-2 rounded-md text-sm font-medium transition-colors hover:bg-secondary ${
+                      location.pathname.includes('/profile') ? 'text-primary' : 'text-foreground/80'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <User className="h-5 w-5" />
+                      <span>Profile</span>
+                    </div>
+                  </Link>
+                  <Link 
+                    to="/passport"
+                    className={`p-2 rounded-md text-sm font-medium transition-colors hover:bg-secondary ${
+                      location.pathname.includes('/passport') ? 'text-primary' : 'text-foreground/80'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <ScrollText className="h-5 w-5" />
+                      <span>Passport</span>
+                    </div>
+                  </Link>
+                </>
               )}
               {isAdmin && (
                 <Link 
