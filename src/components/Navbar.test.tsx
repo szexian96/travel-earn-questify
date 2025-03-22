@@ -1,6 +1,5 @@
 
-import { render, screen } from '@/utils/test-utils';
-import userEvent from '@testing-library/user-event';
+import { render, screen, describe, test, expect, userEvent } from '@/utils/test-utils';
 import Navbar from './Navbar';
 
 describe('Navbar Component', () => {

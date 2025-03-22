@@ -7,6 +7,7 @@ import { store } from '../redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/context/AuthContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import '@testing-library/jest-dom'; // Import jest-dom for the DOM matchers
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +40,10 @@ const customRender = (
 
 // re-export everything
 export * from '@testing-library/react';
+export { default as userEvent } from '@testing-library/user-event';
 
 // override render method
 export { customRender as render };
+
+// explicitly export the testing functions that were missing types
+export { describe, test, expect, it, beforeEach, afterEach } from '@jest/globals';
