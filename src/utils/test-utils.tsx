@@ -10,7 +10,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { describe, test, expect, it, beforeEach, afterEach } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
 
-// Import jest-dom
+// Import jest-dom to extend matchers
 import '@testing-library/jest-dom';
 
 const queryClient = new QueryClient({
