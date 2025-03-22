@@ -20,6 +20,7 @@ import ModelRouteDetails from "./pages/ModelRouteDetails";
 import Passport from "./pages/Passport";
 import Explore from "./pages/Explore";
 import AdminPanel from "./pages/admin/AdminPanel";
+import AdminLoginButton from "./components/AdminLoginButton";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,9 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <BrowserRouter>
+          <div className="fixed bottom-4 right-4 z-50">
+            <AdminLoginButton />
+          </div>
           <AnimatePresence mode="wait">
             <Routes>
               <Route path="/" element={<Index />} />
