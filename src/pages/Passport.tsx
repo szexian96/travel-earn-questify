@@ -1,13 +1,14 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Stamp, Award, Map, Clock, CalendarDays, MapPin, BookOpen, Check } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DigitalPassport, { HankoStamp } from '@/components/DigitalPassport';
+import PassportWallet from '@/components/PassportWallet';
 import { Button } from '@/components/ui/button';
 
 // Mock passport data
 const mockUserData = {
+  id: 'passport-123456789',
   username: 'TravelLover',
   userImage: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1522&q=80',
   level: 3,
@@ -126,6 +127,20 @@ const mockAchievements = [
 ];
 
 const Passport = () => {
+  const [showWallet, setShowWallet] = useState(false);
+  
+  const handleWalletClick = () => {
+    setShowWallet(true);
+    
+    // Scroll to wallet section
+    setTimeout(() => {
+      const walletElement = document.getElementById('passport-wallet');
+      if (walletElement) {
+        walletElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -147,6 +162,7 @@ const Passport = () => {
             touriiPoints={mockUserData.touriiPoints}
             stamps={mockUserData.stamps}
             achievements={mockUserData.achievements}
+            onWalletClick={handleWalletClick}
           />
           
           <div className="mt-6 tourii-card p-4">
@@ -165,6 +181,18 @@ const Passport = () => {
               <Button size="sm">Redeem</Button>
             </div>
           </div>
+          
+          {showWallet && (
+            <div id="passport-wallet">
+              <PassportWallet 
+                username={mockUserData.username}
+                level={mockUserData.level}
+                touriiPoints={mockUserData.touriiPoints}
+                stamps={mockUserData.stamps}
+                passportId={mockUserData.id}
+              />
+            </div>
+          )}
         </div>
         
         <div className="lg:col-span-2">

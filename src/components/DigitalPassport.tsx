@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Award, Trophy, Star, Map } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Award, Trophy, Star, Map, Wallet } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export type HankoStamp = {
   id: string;
@@ -22,6 +23,7 @@ interface DigitalPassportProps {
     total: number;
     unlocked: number;
   };
+  onWalletClick?: () => void;
 }
 
 const DigitalPassport: React.FC<DigitalPassportProps> = ({
@@ -31,6 +33,7 @@ const DigitalPassport: React.FC<DigitalPassportProps> = ({
   touriiPoints,
   stamps,
   achievements,
+  onWalletClick,
 }) => {
   return (
     <Card className="overflow-hidden tourii-card relative">
@@ -128,6 +131,19 @@ const DigitalPassport: React.FC<DigitalPassportProps> = ({
           </div>
         </div>
       </CardContent>
+      
+      {onWalletClick && (
+        <CardFooter className="px-6 py-3 bg-tourii-warm-grey-2/30 dark:bg-tourii-charcoal/20 border-t border-tourii-warm-grey-3 dark:border-tourii-charcoal/30">
+          <Button 
+            onClick={onWalletClick} 
+            variant="outline" 
+            className="w-full flex items-center justify-center"
+          >
+            <Wallet className="h-4 w-4 mr-2" />
+            Add to Apple Wallet
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 };
