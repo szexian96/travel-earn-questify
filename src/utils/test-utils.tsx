@@ -13,14 +13,16 @@ import userEvent from '@testing-library/user-event';
 // Import jest-dom and extend expect
 import '@testing-library/jest-dom';
 
-// Extend the Jest matchers
+// This is necessary because TypeScript doesn't know about the Jest DOM matchers
+// that are added by @testing-library/jest-dom
 declare global {
   namespace jest {
     interface Matchers<R> {
       toBeInTheDocument(): R;
       toBeVisible(): R;
-      toHaveTextContent(text: string): R;
+      toHaveTextContent(text: string | RegExp): R;
       toHaveClass(className: string): R;
+      // Add other matchers as needed
     }
   }
 }
