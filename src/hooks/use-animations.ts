@@ -24,7 +24,7 @@ export const useAnimateInView = ({
   const ref = useRef(null);
   const controls = useAnimation();
   const isInView = useInView(ref, { 
-    threshold,
+    amount: threshold, // Changed from threshold to amount which is the correct property
     once,
   });
 

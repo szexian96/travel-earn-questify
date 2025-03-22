@@ -1,5 +1,5 @@
 
-import { configureStore, Middleware } from '@reduxjs/toolkit';
+import { configureStore, Middleware, AnyAction } from '@reduxjs/toolkit';
 import storiesReducer from './slices/storiesSlice';
 import modelRoutesReducer from './slices/modelRoutesSlice';
 import questsReducer from './slices/questsSlice';
@@ -7,7 +7,10 @@ import usersReducer from './slices/usersSlice';
 
 // Middleware for logging actions (helps with debugging)
 const loggerMiddleware: Middleware = store => next => action => {
-  console.group(`Redux Action: ${action.type}`);
+  // Type guard to check if action has a type property
+  const actionType = 'type' in action ? action.type : 'Unknown action';
+  
+  console.group(`Redux Action: ${actionType}`);
   console.info('Dispatching:', action);
   const result = next(action);
   console.log('Next state:', store.getState());
