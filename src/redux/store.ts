@@ -8,7 +8,10 @@ import usersReducer from './slices/usersSlice';
 // Middleware for logging actions (helps with debugging)
 const loggerMiddleware: Middleware = store => next => action => {
   // Type guard to check if action has a type property
-  const actionType = 'type' in action ? action.type : 'Unknown action';
+  // We need to cast action as object to check for the type property
+  const actionType = action && typeof action === 'object' && 'type' in action 
+    ? (action as AnyAction).type 
+    : 'Unknown action';
   
   console.group(`Redux Action: ${actionType}`);
   console.info('Dispatching:', action);
