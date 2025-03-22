@@ -16,6 +16,11 @@ export default tseslint.config(
         ...globals.browser,
         ...globals.jest
       },
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
     plugins: {
       "react-hooks": reactHooks,
@@ -28,6 +33,7 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-namespace": ["error", { "allowDeclarations": true }],
     },
   }
 );

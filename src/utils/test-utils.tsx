@@ -13,16 +13,23 @@ import userEvent from '@testing-library/user-event';
 // Import jest-dom and extend expect
 import '@testing-library/jest-dom';
 
-// This extends the Jest expect with custom DOM matchers
-// These type definitions ensure TypeScript recognizes the custom matchers added by @testing-library/jest-dom
+// Properly setup the Jest DOM matchers type definitions
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
-    interface Matchers<R, T = any> {
+    // Use extends to avoid conflicts with existing Jest types
+    interface Matchers<R> extends Omit<jest.Matchers<R>, 'toBeInTheDocument' | 'toBeVisible' | 'toHaveTextContent' | 'toHaveClass'> {
       toBeInTheDocument(): R;
       toBeVisible(): R;
       toHaveTextContent(text: string | RegExp): R;
       toHaveClass(className: string): R;
-      // Add other jest-dom matchers as needed
+    }
+    // Add more interfaces as needed for other matcher groups
+    interface JestMatchers<R> {
+      toBeInTheDocument(): R;
+      toBeVisible(): R;
+      toHaveTextContent(text: string | RegExp): R;
+      toHaveClass(className: string): R;
     }
   }
 }
