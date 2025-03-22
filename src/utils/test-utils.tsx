@@ -49,5 +49,5 @@ export { userEvent };
 // override render method
 export { customRender as render };
 
-// explicitly export the testing functions that were missing types
+// explicitly export the testing functions
 export { describe, test, expect, it, beforeEach, afterEach };
