@@ -7,9 +7,23 @@ import { store } from '../redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/context/AuthContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import '@testing-library/jest-dom'; // Import jest-dom for the DOM matchers
 import { describe, test, expect, it, beforeEach, afterEach } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
+
+// Import jest-dom and extend expect
+import '@testing-library/jest-dom';
+
+// Extend the Jest matchers
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toBeInTheDocument(): R;
+      toBeVisible(): R;
+      toHaveTextContent(text: string): R;
+      toHaveClass(className: string): R;
+    }
+  }
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
