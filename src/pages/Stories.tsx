@@ -1,8 +1,25 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { motion, useAnimation } from 'framer-motion';
 import { ScrollText, Book } from 'lucide-react';
 import StoryCard, { Story } from '@/components/StoryCard';
+import { useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { setStories, setLoading } from '@/redux/slices/storiesSlice';
+
+// For staggered animation of cards
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3
+    }
+  }
+};
 
 // Mock data for stories
 const mockStories: Story[] = [
@@ -61,31 +78,107 @@ const mockStories: Story[] = [
 ];
 
 const Stories = () => {
+  const dispatch = useDispatch();
+  const { items: stories, loading } = useSelector((state: RootState) => state.stories);
+  
+  const headerRef = useRef(null);
+  const isHeaderInView = useInView(headerRef, { once: true });
+  
+  const descriptionRef = useRef(null);
+  const isDescriptionInView = useInView(descriptionRef, { once: true });
+  
+  const footerRef = useRef(null);
+  const isFooterInView = useInView(footerRef, { once: true });
+  
+  useEffect(() => {
+    dispatch(setLoading(true));
+    
+    // Simulate API call with timeout
+    setTimeout(() => {
+      dispatch(setStories(mockStories));
+      dispatch(setLoading(false));
+    }, 500);
+  }, [dispatch]);
+  
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
       className="page-container"
     >
-      <div className="flex items-center mb-6">
-        <ScrollText className="h-8 w-8 mr-3 text-tourii-red" />
+      <motion.div 
+        ref={headerRef}
+        initial={{ opacity: 0, y: -20 }}
+        animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="flex items-center mb-6"
+      >
+        <motion.div
+          initial={{ rotate: -10, scale: 0.8 }}
+          animate={{ rotate: 0, scale: 1 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 260, 
+            damping: 20,
+            delay: 0.2 
+          }}
+        >
+          <ScrollText className="h-8 w-8 mr-3 text-tourii-red" />
+        </motion.div>
         <h1 className="text-3xl font-bold">Travel Stories</h1>
-      </div>
+      </motion.div>
       
-      <p className="text-lg text-muted-foreground mb-8">
+      <motion.p 
+        ref={descriptionRef}
+        initial={{ opacity: 0, y: 20 }}
+        animate={isDescriptionInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
+        className="text-lg text-muted-foreground mb-8"
+      >
         Discover Japan through immersive stories that unlock new destinations and quests.
-      </p>
+      </motion.p>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockStories.map((story) => (
-          <StoryCard key={story.id} story={story} />
-        ))}
-      </div>
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="h-[350px] bg-secondary/30 rounded-lg animate-pulse"
+            />
+          ))}
+        </div>
+      ) : (
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {stories.map((story) => (
+            <StoryCard key={story.id} story={story} />
+          ))}
+        </motion.div>
+      )}
       
-      <div className="mt-12 bg-tourii-warm-grey/50 dark:bg-tourii-charcoal/50 rounded-xl p-6">
+      <motion.div 
+        ref={footerRef}
+        initial={{ opacity: 0, y: 30 }}
+        animate={isFooterInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.7, delay: 0.5 }}
+        className="mt-12 bg-tourii-warm-grey/50 dark:bg-tourii-charcoal/50 rounded-xl p-6"
+      >
         <div className="flex items-center mb-4">
-          <Book className="h-6 w-6 mr-2 text-tourii-red" />
+          <motion.div
+            whileHover={{ rotate: 5, scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Book className="h-6 w-6 mr-2 text-tourii-red" />
+          </motion.div>
           <h2 className="text-xl font-semibold">How Stories Work</h2>
         </div>
         <p className="text-muted-foreground">
@@ -93,7 +186,7 @@ const Stories = () => {
           which reveal hidden tourist spots and model routes. As you explore real locations, you'll collect
           Hanko stamps in your digital passport and earn Tourii Points for special rewards.
         </p>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

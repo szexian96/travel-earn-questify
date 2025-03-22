@@ -1,9 +1,19 @@
 
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, Middleware } from '@reduxjs/toolkit';
 import storiesReducer from './slices/storiesSlice';
 import modelRoutesReducer from './slices/modelRoutesSlice';
 import questsReducer from './slices/questsSlice';
 import usersReducer from './slices/usersSlice';
+
+// Middleware for logging actions (helps with debugging)
+const loggerMiddleware: Middleware = store => next => action => {
+  console.group(`Redux Action: ${action.type}`);
+  console.info('Dispatching:', action);
+  const result = next(action);
+  console.log('Next state:', store.getState());
+  console.groupEnd();
+  return result;
+};
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +22,9 @@ export const store = configureStore({
     quests: questsReducer,
     users: usersReducer,
   },
+  middleware: (getDefaultMiddleware) => 
+    getDefaultMiddleware().concat(loggerMiddleware),
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
 export type RootState = ReturnType<typeof store.getState>;
