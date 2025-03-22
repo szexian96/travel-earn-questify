@@ -7,11 +7,13 @@ import { store } from '../redux/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/context/AuthContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { describe, test, expect, it, beforeEach, afterEach } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
 
 // Import jest-dom to extend matchers
 import '@testing-library/jest-dom';
+
+// Re-export Jest globals
+import { describe, test, expect, it, beforeEach, afterEach } from '@jest/globals';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,9 +47,5 @@ const customRender = (
 // re-export everything
 export * from '@testing-library/react';
 export { userEvent };
-
-// override render method
 export { customRender as render };
-
-// explicitly export the testing functions
 export { describe, test, expect, it, beforeEach, afterEach };
