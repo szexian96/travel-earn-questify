@@ -10,21 +10,8 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { describe, test, expect, it, beforeEach, afterEach } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
 
-// Import jest-dom and extend expect
+// Import jest-dom
 import '@testing-library/jest-dom';
-
-// Define the global type augmentations for Jest DOM matchers
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace jest {
-    interface Matchers<R> {
-      toBeInTheDocument(): R;
-      toBeVisible(): R;
-      toHaveTextContent(text: string | RegExp): R;
-      toHaveClass(className: string): R;
-    }
-  }
-}
 
 const queryClient = new QueryClient({
   defaultOptions: {
