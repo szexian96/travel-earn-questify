@@ -1,27 +1,57 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export type QuestType = 'earn' | 'travel';
+export type TaskType = 
+  | 'trivia' 
+  | 'short_answer' 
+  | 'social_share' 
+  | 'virtual_exploration' 
+  | 'photo_upload'
+  | 'gps_checkin'
+  | 'qr_scan'
+  | 'local_experience'
+  | 'group_quest'
+  | 'location_reflection';
+
+export interface QuestTask {
+  id: string;
+  titleEn: string;
+  titleJp: string;
+  descriptionEn: string;
+  descriptionJp: string;
+  completed: boolean;
+  type: TaskType;
+  options?: {
+    choices?: string[];
+    correctAnswer?: string;
+    hashtags?: string[];
+    qrValue?: string;
+    gpsLocation?: {
+      lat: number;
+      lng: number;
+      name: string;
+      radiusMeters: number;
+    };
+  };
+}
+
 export interface Quest {
   id: string;
-  title: string;
-  description: string;
+  titleEn: string;
+  titleJp: string;
+  descriptionEn: string;
+  descriptionJp: string;
   thumbnail: string;
   status: 'active' | 'completed' | 'locked';
   difficulty: 'Easy' | 'Moderate' | 'Hard';
+  type: QuestType;
+  touristSpotId?: string;
   rewards: {
     points: number;
     badges: string[];
   };
-  tasks: {
-    id: string;
-    title: string;
-    completed: boolean;
-    location?: {
-      lat: number;
-      lng: number;
-      name: string;
-    };
-  }[];
+  tasks: QuestTask[];
   tags: string[];
 }
 
