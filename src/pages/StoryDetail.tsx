@@ -1,224 +1,351 @@
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useLanguage } from '@/context/LanguageContext';
+import { motion } from 'framer-motion';
+import { 
+  ChevronLeft, 
+  User, 
+  Map, 
+  FileText, 
+  Globe,
+  BookOpen,
+  Video
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, BookOpen, Map, MapPin, Lock } from 'lucide-react';
-import MakimonoScroll from '@/components/MakimonoScroll';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
+import MakimonoStoryScroll from '@/components/MakimonoStoryScroll';
+import StoryChaptersNav, { StoryChapter } from '@/components/StoryChaptersNav';
+import CharacterProfile, { Character } from '@/components/CharacterProfile';
+import WorldLoreEntry, { WorldLoreEntry } from '@/components/WorldLoreEntry';
 
-// Mock data for story chapters
-const mockStoryChapters = [
-  {
-    id: 'chapter-1',
-    title: 'The Red Gates of Inari',
-    content: `
-      <p>The morning sun cast long shadows through the thousands of vermilion torii gates that lined the path up the sacred mountain. Akiko paused, watching the interplay of light and shadow on the ancient stone steps.</p>
-      
-      <p>"They say Fushimi Inari has over ten thousand torii gates," her grandfather had told her. "Each one donated by a business or individual in hopes of prosperity."</p>
-      
-      <p>As she began her ascent, Akiko could feel the weight of centuries of tradition pressing down upon her. The air was thick with incense and the whispers of prayers long since uttered.</p>
-      
-      <p>She remembered the story her grandmother had shared about the white foxes—messengers of Inari, the Shinto deity of rice, prosperity, and success. Legend had it that if you spotted a white fox on the mountain, your wish would surely come true.</p>
-      
-      <p>At a small shrine halfway up the mountain, Akiko clapped her hands twice and bowed deeply. She closed her eyes and made her wish, feeling a connection to generations of pilgrims who had stood in this exact spot.</p>
-      
-      <p>When she opened her eyes, she thought she glimpsed a flash of white disappearing around a bend in the path ahead...</p>
-    `,
-    unlocksSpotId: 'spot-1',
-  },
-  {
-    id: 'chapter-2',
-    title: "Kiyomizu's Pure Waters",
-    content: `
-      <p>The wooden veranda of Kiyomizu-dera stretched out before Akiko like an ancient ship sailing through a sea of maple trees. From this vantage point, all of Kyoto was laid out beneath her, a patchwork of tradition and modernity.</p>
-      
-      <p>"This entire structure was built without a single nail," her guide explained, gesturing to the massive wooden pillars supporting the temple. "And did you know that in the Edo period, people would jump from this platform?"</p>
-      
-      <p>Akiko's eyes widened. "Why would they do that?"</p>
-      
-      <p>"There was a belief that if you survived the 13-meter jump, your wish would be granted," the guide continued. "The phrase 'to jump off the stage at Kiyomizu' became a saying similar to 'taking the plunge' in English."</p>
-      
-      <p>At the Otowa Waterfall below the temple, Akiko joined the line of visitors waiting to drink from the three streams of sacred water, each offering a different blessing: longevity, success in education, or luck in love.</p>
-      
-      <p>As the cool, sweet water touched her lips, Akiko felt a sense of purification wash over her. The temple's name, Kiyomizu, meant "pure water"—and in that moment, she understood why this place had drawn pilgrims for over a thousand years.</p>
-    `,
-    unlocksSpotId: 'spot-2',
-  },
-  {
-    id: 'chapter-3',
-    title: 'Shadows of Gion',
-    content: `
-      <p>Lanterns glowed softly in the gathering dusk as Akiko made her way through the narrow streets of Gion. The wooden machiya townhouses with their latticed windows and tiled roofs transported her to another era.</p>
-      
-      <p>A flash of white and crimson at the end of an alley caught her eye—a geiko hurrying to an appointment, her silk kimono rustling with each delicate step. The white makeup and elaborate hairstyle were like something from a dream or a painting come to life.</p>
-      
-      <p>Akiko remembered her grandmother's stories about Gion in the post-war years—how the district had preserved traditions that stretched back centuries, even as the world around it changed beyond recognition.</p>
-      
-      <p>"Gion is built on secrets," her grandmother had told her. "The art of the geiko and maiko isn't just in dance or music or conversation—it's in knowing what to reveal and what to keep hidden."</p>
-      
-      <p>As night fell completely, Akiko found herself outside an ochaya—a traditional teahouse. From beyond its closed doors came the sound of a shamisen and laughter, the echoes of an exclusive world few outsiders ever truly entered.</p>
-      
-      <p>She stood for a moment in the pool of light from a paper lantern, feeling the boundary between past and present dissolve around her.</p>
-    `,
-    unlocksSpotId: 'spot-3',
-  },
-];
-
-// Mock story data
-const mockStoryDetails = {
+// Mock data for the story details
+const mockStory = {
   id: '1',
-  title: "The Legend of Kyoto's Hidden Temples",
-  description: "Discover the ancient secrets of Kyoto's most mysterious shrines and the legends that surround them.",
-  thumbnail: 'https://images.unsplash.com/photo-1598890777032-bde835a53f66?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-  chapters: {
-    total: 5,
-    unlocked: 3,
-  },
-  relatedRouteId: 'kyoto-1',
-  tags: ['Kyoto', 'Temples', 'Spiritual'],
+  titleEn: 'The Lost Temple of Kyoto',
+  titleJp: '京都の失われた寺院',
+  descriptionEn: 'Discover the secrets of an ancient temple hidden in Kyoto\'s mountains.',
+  descriptionJp: '京都の山々に隠された古代寺院の秘密を発見しよう。',
+  contentEn: `For centuries, rumors had circulated among the locals about a temple hidden deep in the forests of eastern Kyoto. Some said it housed incredible treasures, while others claimed it was home to powerful spirits.\n\nIt wasn't until 1923 that explorer Hiroshi Tanaka stumbled upon ancient stone steps while hiking in the area. Following them deeper into the forest, he discovered the remains of what would later be known as Shinrin-ji (Forest Temple).\n\nThe temple's architecture suggested it was built during the early Heian period, around the 9th century. What made it truly remarkable was that it had seemingly been abandoned suddenly, with many artifacts left behind.\n\nArchaeologists found scrolls describing rituals performed to communicate with the spirits of the forest. The temple's main hall featured intricate wooden carvings depicting these ceremonies.\n\nToday, parts of the temple have been carefully restored, though much remains as it was found. Visitors can hike the same path Tanaka took, experiencing the same sense of discovery as they emerge from the forest to find this hidden historical treasure.`,
+  contentJp: `何世紀もの間、京都東部の森深くに隠された寺院についての噂が地元の人々の間で広まっていました。すばらしい宝物が収められていると言う人もいれば、強力な霊が住んでいると主張する人もいました。\n\n1923年になって初めて、探検家の田中博がこの地域をハイキング中に古い石段を偶然発見しました。森の奥へと続くその階段をたどっていくと、後に森林寺（しんりんじ）として知られることになる寺院の遺跡を発見しました。\n\n寺院の建築様式は、9世紀頃の平安時代初期に建てられたことを示唆していました。特に注目すべきは、多くの工芸品が残されたまま、突然放棄されたように見えることでした。\n\n考古学者たちは、森の精霊と交信するために行われた儀式を記述した巻物を発見しました。寺院の本堂には、これらの儀式を描いた精巧な木彫りが施されていました。\n\n今日、寺院の一部は慎重に復元されていますが、発見された当時のままの部分も多く残っています。訪問者は田中と同じ道をハイキングし、森から抜け出してこの隠された歴史的宝物を見つけたときと同じ発見の感覚を体験することができます。`,
+  videoUrlEn: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+  videoUrlJp: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+  thumbnailUrl: 'https://source.unsplash.com/random/800x600/?temple,kyoto',
+  coverImage: 'https://source.unsplash.com/random/1200x600/?temple,japan',
+  createdAt: '2023-05-15T09:30:00Z',
+  updatedAt: '2023-07-10T14:20:00Z'
 };
 
-const StoryDetail = () => {
+// Mock chapters data
+const mockChapters: StoryChapter[] = [
+  {
+    id: '1',
+    numberLabel: 'Chapter 1',
+    titleEn: 'The Discovery',
+    titleJp: '発見',
+    descriptionEn: 'Hiroshi Tanaka\'s fateful hike through eastern Kyoto',
+    descriptionJp: '田中博の運命的な京都東部でのハイキング',
+    durationMinutes: 10,
+    isLocked: false,
+    thumbnailUrl: 'https://source.unsplash.com/random/100x100/?hike'
+  },
+  {
+    id: '2',
+    numberLabel: 'Chapter 2',
+    titleEn: 'Secret Scrolls',
+    titleJp: '秘密の巻物',
+    descriptionEn: 'Uncovering the temple\'s mysterious rituals',
+    descriptionJp: '寺院の謎めいた儀式の発見',
+    durationMinutes: 15,
+    isLocked: false,
+    thumbnailUrl: 'https://source.unsplash.com/random/100x100/?scroll'
+  },
+  {
+    id: '3',
+    numberLabel: 'Chapter 3',
+    titleEn: 'Forest Spirits',
+    titleJp: '森の精霊',
+    descriptionEn: 'The legends of spirits that protected the temple',
+    descriptionJp: '寺院を守った精霊の伝説',
+    durationMinutes: 12,
+    isLocked: true,
+    thumbnailUrl: 'https://source.unsplash.com/random/100x100/?spirit'
+  },
+  {
+    id: '4',
+    numberLabel: 'Chapter 4',
+    titleEn: 'Modern Revelations',
+    titleJp: '現代の啓示',
+    descriptionEn: 'What archaeologists have learned in recent years',
+    descriptionJp: '考古学者が近年学んだこと',
+    durationMinutes: 18,
+    isLocked: true
+  }
+];
+
+// Mock characters data
+const mockCharacters: Character[] = [
+  {
+    id: '1',
+    nameEn: 'Hiroshi Tanaka',
+    nameJp: '田中 博',
+    role: 'Explorer',
+    locationEn: 'Kyoto',
+    locationJp: '京都',
+    quoteEn: 'The forest doesn\'t give up its secrets easily, but the patient seeker will be rewarded.',
+    quoteJp: '森は簡単に秘密を明かさないが、忍耐強い探求者は報われるだろう。',
+    descriptionEn: 'Born in 1890, Hiroshi Tanaka was a devoted explorer and historian who spent his life documenting the hidden cultural treasures of Japan.\n\nAfter discovering the Lost Temple in 1923, he dedicated the remainder of his career to studying and preserving the site.',
+    descriptionJp: '1890年生まれの田中博は、日本の隠された文化的宝物を生涯にわたって記録してきた熱心な探検家であり歴史家でした。\n\n1923年に失われた寺院を発見した後、彼はその場所の研究と保存に残りの経歴を捧げました。',
+    imageUrl: 'https://source.unsplash.com/random/300x400/?japanese,man',
+    relatedQuests: ['Temple Explorer Quest', 'Historical Documentation Quest'],
+    relatedStories: ['The Lost Temple of Kyoto']
+  },
+  {
+    id: '2',
+    nameEn: 'Akiko Yamamoto',
+    nameJp: '山本 明子',
+    role: 'Archaeologist',
+    locationEn: 'Tokyo University',
+    locationJp: '東京大学',
+    quoteEn: 'Every artifact tells a story if you know how to listen.',
+    quoteJp: '聞き方を知っていれば、すべての遺物は物語を語る。',
+    descriptionEn: 'Professor Akiko Yamamoto is the leading authority on Heian period temple architecture and has led the modern restoration efforts at the Lost Temple site.\n\nHer research has revealed new connections between the temple\'s design and astronomical alignments that suggest it may have served as an ancient observatory.',
+    descriptionJp: '山本明子教授は平安時代の寺院建築の第一人者であり、失われた寺院の現代の修復活動を主導してきました。\n\n彼女の研究により、寺院のデザインと天文学的配置の間に新たなつながりが明らかになり、それが古代の天文台として機能していた可能性が示唆されています。',
+    imageUrl: 'https://source.unsplash.com/random/300x400/?japanese,woman',
+    relatedQuests: ['Archaeological Dig Quest'],
+    relatedStories: ['The Lost Temple of Kyoto', 'Sacred Sites of Japan']
+  }
+];
+
+// Mock world lore entries
+const mockWorldLore: WorldLoreEntry[] = [
+  {
+    id: '1',
+    titleEn: 'Heian Period Architecture',
+    titleJp: '平安時代の建築',
+    categoryEn: 'Historical',
+    categoryJp: '歴史的',
+    contentEn: 'The Heian period (794-1185) saw distinctive architectural developments in Japanese religious structures. Temples of this era typically featured multi-tiered pagodas, extensive use of wooden brackets, and asymmetrical layouts that harmonized with natural surroundings.\n\nUnlike previous eras where Chinese influence dominated, Heian architecture began developing uniquely Japanese characteristics, with greater attention to integrating buildings with the landscape and more refined proportions.',
+    contentJp: '平安時代（794-1185）は、日本の宗教的建造物において独特の建築的発展が見られました。この時代の寺院は典型的に多層の塔、木製ブラケットの広範な使用、自然環境と調和した非対称的なレイアウトを特徴としていました。\n\n中国の影響が支配的だった以前の時代とは異なり、平安建築は建物と風景の統合により大きな注意を払い、よりリファインされた比率を持つ独自の日本的特徴を発展させ始めました。',
+    imageUrl: 'https://source.unsplash.com/random/400x300/?japanese,temple',
+    relatedLocations: [
+      {
+        nameEn: 'Byodo-in Temple',
+        nameJp: '平等院',
+        id: 'loc1'
+      },
+      {
+        nameEn: 'Daigo-ji Temple',
+        nameJp: '醍醐寺',
+        id: 'loc2'
+      }
+    ],
+    tags: ['Architecture', 'Heian Period', 'Temples', 'Japanese History']
+  },
+  {
+    id: '2',
+    titleEn: 'Forest Spirit Beliefs',
+    titleJp: '森の精霊信仰',
+    categoryEn: 'Mythology',
+    categoryJp: '神話',
+    contentEn: 'Throughout Japanese history, forests have been considered sacred spaces inhabited by various spirits called kami. Kodama are spirits believed to inhabit trees, while tengu are more complex supernatural beings often associated with mountains and forests.\n\nRituals to honor and appease these forest spirits were common in remote temples, involving offerings of sake, rice, and sometimes specialized ceremonies during seasonal changes. Many of these practices blended elements of indigenous Shinto beliefs with imported Buddhist concepts.',
+    contentJp: '日本の歴史を通じて、森は神と呼ばれるさまざまな精霊が住む神聖な空間と考えられてきました。木霊は木に宿ると信じられている精霊であり、天狗はより複雑な超自然的存在で、山や森に関連することが多いです。\n\nこれらの森の精霊を敬い、なだめるための儀式は辺鄙な寺院では一般的で、酒や米の奉納、そして時には季節の変わり目に特殊な儀式を行うことがありました。これらの慣行の多くは、土着の神道の信仰と輸入された仏教の概念の要素を混合していました。',
+    imageUrl: 'https://source.unsplash.com/random/400x300/?japanese,forest',
+    relatedLocations: [
+      {
+        nameEn: 'Mount Kurama',
+        nameJp: '鞍馬山',
+        id: 'loc3'
+      }
+    ],
+    tags: ['Spirits', 'Mythology', 'Kodama', 'Tengu', 'Forest Kami']
+  }
+];
+
+const StoryDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [activeChapter, setActiveChapter] = useState(0);
-  
+  const { language, t } = useLanguage();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [story, setStory] = useState(mockStory);
+  const [chapters, setChapters] = useState(mockChapters);
+  const [characters, setCharacters] = useState(mockCharacters);
+  const [worldLore, setWorldLore] = useState(mockWorldLore);
+  const [activeTab, setActiveTab] = useState('story');
+  const [selectedChapterId, setSelectedChapterId] = useState(mockChapters[0]?.id);
+
+  // Get the selected chapter
+  const selectedChapter = chapters.find(ch => ch.id === selectedChapterId) || chapters[0];
+
+  useEffect(() => {
+    // Simulate loading story data
+    const loadStory = async () => {
+      setLoading(true);
+      try {
+        // In a real app, fetch the story by id
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading story:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load story details',
+          variant: 'destructive',
+        });
+        setLoading(false);
+      }
+    };
+    
+    loadStory();
+  }, [id, toast]);
+
+  // Handle chapter selection
+  const handleChapterSelect = (chapterId: string) => {
+    const chapter = chapters.find(ch => ch.id === chapterId);
+    if (chapter && !chapter.isLocked) {
+      setSelectedChapterId(chapterId);
+    } else {
+      toast({
+        title: t('story.lockedContent'),
+        description: 'Complete previous chapters to unlock this content',
+        variant: 'default',
+      });
+    }
+  };
+
+  // Get localized content
+  const title = language === 'en' ? story.titleEn : story.titleJp;
+  const content = language === 'en' ? story.contentEn : story.contentJp;
+  const videoUrl = language === 'en' ? story.videoUrlEn : story.videoUrlJp;
+
+  // Content animation variants
+  const contentVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.5 } }
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="page-container"
-    >
-      <Link to="/stories" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-4">
-        <ChevronLeft className="h-4 w-4 mr-1" />
-        Back to Stories
-      </Link>
-      
-      <div className="relative h-64 md:h-80 rounded-xl overflow-hidden mb-8">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10" />
-        <img
-          src={mockStoryDetails.thumbnail}
-          alt={mockStoryDetails.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute bottom-0 left-0 z-20 p-6 w-full">
-          <div className="flex flex-wrap gap-2 mb-2">
-            {mockStoryDetails.tags.map((tag, i) => (
-              <Badge key={i} variant="outline" className="bg-white/20 text-white border-white/30">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-          <h1 className="text-white text-3xl md:text-4xl font-bold mb-2">{mockStoryDetails.title}</h1>
-          <div className="flex items-center text-white/90">
-            <BookOpen className="h-4 w-4 mr-1" />
-            <span>{mockStoryDetails.chapters.unlocked} of {mockStoryDetails.chapters.total} chapters unlocked</span>
-          </div>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-1 order-2 lg:order-1">
-          <div className="tourii-card p-4 sticky top-4">
-            <h3 className="text-lg font-medium mb-4">Story Chapters</h3>
-            <div className="space-y-3">
-              {Array.from({ length: mockStoryDetails.chapters.total }).map((_, i) => (
-                <button
-                  key={i}
-                  className={`w-full text-left p-3 rounded-md flex items-center justify-between transition-colors ${
-                    i === activeChapter
-                      ? 'bg-tourii-red/10 text-tourii-red'
-                      : i < mockStoryDetails.chapters.unlocked
-                      ? 'hover:bg-secondary'
-                      : 'opacity-60 cursor-not-allowed'
-                  }`}
-                  onClick={() => i < mockStoryDetails.chapters.unlocked && setActiveChapter(i)}
-                  disabled={i >= mockStoryDetails.chapters.unlocked}
-                >
-                  <span className="flex items-center">
-                    <span className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-xs mr-2">
-                      {i + 1}
-                    </span>
-                    {i < mockStoryChapters.length
-                      ? mockStoryChapters[i].title
-                      : `Chapter ${i + 1}`}
-                  </span>
-                  {i >= mockStoryDetails.chapters.unlocked && (
-                    <Lock className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </button>
-              ))}
-            </div>
-            
-            <div className="mt-6">
-              <Button variant="outline" className="w-full mb-3">
-                <BookOpen className="h-4 w-4 mr-2" />
-                Story Overview
-              </Button>
-              
-              <Button className="w-full" asChild>
-                <Link to={`/routes/${mockStoryDetails.relatedRouteId}`}>
-                  <Map className="h-4 w-4 mr-2" />
-                  View Related Route
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
+    <div className="container mx-auto px-4 sm:px-6 py-10">
+      {/* Story Header */}
+      <motion.div 
+        className="mb-8"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Link to="/stories" className="inline-flex items-center text-sm mb-4 text-muted-foreground hover:text-primary transition-colors">
+          <ChevronLeft className="mr-1 h-4 w-4" />
+          Back to Stories
+        </Link>
         
-        <div className="lg:col-span-3 order-1 lg:order-2">
-          {activeChapter < mockStoryChapters.length && (
-            <>
-              <MakimonoScroll title={mockStoryChapters[activeChapter].title}>
-                <div 
-                  className="prose dark:prose-invert max-w-none"
-                  dangerouslySetInnerHTML={{ __html: mockStoryChapters[activeChapter].content }}
+        <div className="relative rounded-xl overflow-hidden h-48 sm:h-64 md:h-96 mb-6">
+          <img 
+            src={story.coverImage || story.thumbnailUrl} 
+            alt={title} 
+            className="w-full h-full object-cover" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 right-0 p-6">
+            <h1 className="text-3xl md:text-4xl font-bold">{title}</h1>
+          </div>
+        </div>
+      </motion.div>
+      
+      {/* Content Tabs */}
+      <div className="flex flex-col">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="w-full max-w-md mx-auto mb-8">
+            <TabsTrigger value="story" className="flex-1">
+              <FileText className="mr-2 h-4 w-4" />
+              {t('story.chapters')}
+            </TabsTrigger>
+            <TabsTrigger value="characters" className="flex-1">
+              <User className="mr-2 h-4 w-4" />
+              {t('story.characters')}
+            </TabsTrigger>
+            <TabsTrigger value="lore" className="flex-1">
+              <Globe className="mr-2 h-4 w-4" />
+              {t('story.lore')}
+            </TabsTrigger>
+          </TabsList>
+          
+          {/* Story Content */}
+          <TabsContent value="story" className="w-full">
+            <motion.div 
+              className="grid grid-cols-1 lg:grid-cols-4 gap-8"
+              variants={contentVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {/* Chapters Navigation Sidebar */}
+              <div className="lg:col-span-1">
+                <StoryChaptersNav
+                  chapters={chapters}
+                  currentChapterId={selectedChapterId}
+                  onChapterSelect={handleChapterSelect}
+                />
+              </div>
+              
+              {/* Main Story Content */}
+              <div className="lg:col-span-3">
+                <MakimonoStoryScroll
+                  storyTitle={
+                    selectedChapterId ? 
+                    (language === 'en' ? selectedChapter.titleEn : selectedChapter.titleJp) : 
+                    title
+                  }
+                  storyText={content}
+                  videoUrl={videoUrl}
+                  isVerticalScroll={language === 'jp'}
                 />
                 
-                <div className="mt-8 pt-6 border-t border-tourii-warm-grey-3 dark:border-tourii-charcoal/30">
-                  <div className="bg-tourii-warm-grey/30 dark:bg-tourii-charcoal/30 p-4 rounded-lg">
-                    <h4 className="flex items-center text-lg font-medium mb-2">
-                      <MapPin className="h-5 w-5 mr-2 text-tourii-red" />
-                      Location Unlocked!
-                    </h4>
-                    <p className="mb-4">
-                      You've unlocked a new tourist spot on your Kyoto Cultural Tour! Visit this location
-                      to earn Tourii Points and collect a Hanko stamp for your digital passport.
-                    </p>
-                    <Button asChild>
-                      <Link to={`/routes/${mockStoryDetails.relatedRouteId}`}>
-                        Visit Location
-                      </Link>
+                <div className="mt-6 flex justify-end">
+                  <Button variant="outline" className="mr-3">
+                    <BookOpen className="mr-2 h-4 w-4" />
+                    {t('story.readMore')}
+                  </Button>
+                  {videoUrl && (
+                    <Button>
+                      <Video className="mr-2 h-4 w-4" />
+                      {t('story.watchVideo')}
                     </Button>
-                  </div>
+                  )}
                 </div>
-              </MakimonoScroll>
-              
-              <div className="flex justify-between mt-8">
-                <Button 
-                  variant="outline"
-                  disabled={activeChapter === 0}
-                  onClick={() => activeChapter > 0 && setActiveChapter(activeChapter - 1)}
-                >
-                  Previous Chapter
-                </Button>
-                
-                <Button 
-                  disabled={activeChapter >= mockStoryDetails.chapters.unlocked - 1}
-                  onClick={() => 
-                    activeChapter < mockStoryDetails.chapters.unlocked - 1 && 
-                    setActiveChapter(activeChapter + 1)
-                  }
-                >
-                  Next Chapter
-                </Button>
               </div>
-            </>
-          )}
-        </div>
+            </motion.div>
+          </TabsContent>
+          
+          {/* Characters Content */}
+          <TabsContent value="characters">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              variants={contentVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {characters.map(character => (
+                <CharacterProfile key={character.id} character={character} />
+              ))}
+            </motion.div>
+          </TabsContent>
+          
+          {/* World Lore Content */}
+          <TabsContent value="lore">
+            <motion.div 
+              className="space-y-8"
+              variants={contentVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {worldLore.map(lore => (
+                <WorldLoreEntry key={lore.id} lore={lore} />
+              ))}
+            </motion.div>
+          </TabsContent>
+        </Tabs>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

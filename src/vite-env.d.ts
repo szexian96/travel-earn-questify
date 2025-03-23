@@ -11,5 +11,3 @@ declare namespace jest {
     toHaveClass(className: string): R;
   }
 }
-
-export {};
