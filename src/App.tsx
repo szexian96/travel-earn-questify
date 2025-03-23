@@ -3,6 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
@@ -56,20 +57,22 @@ const App = () => (
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <TooltipProvider>
-          <BrowserRouter>
-            <div className="fixed bottom-4 right-4 z-50">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 1, duration: 0.3 }}
-              >
-                <AdminLoginButton />
-              </motion.div>
-            </div>
-            <AnimatedRoutes />
-          </BrowserRouter>
-        </TooltipProvider>
+        <LanguageProvider>
+          <TooltipProvider>
+            <BrowserRouter>
+              <div className="fixed bottom-4 right-4 z-50">
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 1, duration: 0.3 }}
+                >
+                  <AdminLoginButton />
+                </motion.div>
+              </div>
+              <AnimatedRoutes />
+            </BrowserRouter>
+          </TooltipProvider>
+        </LanguageProvider>
       </AuthProvider>
     </QueryClientProvider>
   </Provider>

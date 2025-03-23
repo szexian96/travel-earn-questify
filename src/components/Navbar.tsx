@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import LanguageSelector from '@/components/LanguageSelector';
 import { 
   Home, 
   Map, 
@@ -29,6 +31,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const Navbar: React.FC = () => {
   const { user, logout, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -51,7 +54,7 @@ const Navbar: React.FC = () => {
   const handleLogout = () => {
     logout();
     toast({
-      title: "Logged out",
+      title: t('nav.logout'),
       description: "You have been successfully logged out",
     });
     navigate('/');
@@ -75,7 +78,7 @@ const Navbar: React.FC = () => {
             className="flex items-center space-x-2 transition-opacity hover:opacity-90"
           >
             <Sparkles className="h-7 w-7 text-primary" />
-            <span className="font-bold text-xl">Questify</span>
+            <span className="font-bold text-xl">Tourii</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -86,7 +89,7 @@ const Navbar: React.FC = () => {
                 location.pathname === '/' ? 'text-primary' : 'text-foreground/80'
               }`}
             >
-              Home
+              {t('nav.home')}
             </Link>
             <Link 
               to="/quests"
@@ -94,7 +97,7 @@ const Navbar: React.FC = () => {
                 location.pathname.includes('/quests') ? 'text-primary' : 'text-foreground/80'
               }`}
             >
-              Quests
+              {t('nav.quests')}
             </Link>
             <Link 
               to="/stories"
@@ -102,7 +105,7 @@ const Navbar: React.FC = () => {
                 location.pathname.includes('/stories') ? 'text-primary' : 'text-foreground/80'
               }`}
             >
-              Stories
+              {t('nav.stories')}
             </Link>
             <Link 
               to="/routes"
@@ -110,7 +113,7 @@ const Navbar: React.FC = () => {
                 location.pathname.includes('/routes') ? 'text-primary' : 'text-foreground/80'
               }`}
             >
-              Routes
+              {t('nav.routes')}
             </Link>
             <Link 
               to="/explore"
@@ -118,7 +121,7 @@ const Navbar: React.FC = () => {
                 location.pathname.includes('/explore') ? 'text-primary' : 'text-foreground/80'
               }`}
             >
-              Explore
+              {t('nav.explore')}
             </Link>
             {isAuthenticated && (
               <Link 
@@ -127,7 +130,7 @@ const Navbar: React.FC = () => {
                   location.pathname.includes('/passport') ? 'text-primary' : 'text-foreground/80'
                 }`}
               >
-                Passport
+                {t('nav.passport')}
               </Link>
             )}
             {isAdmin && (
@@ -137,13 +140,15 @@ const Navbar: React.FC = () => {
                   location.pathname.includes('/admin') ? 'text-primary' : 'text-foreground/80'
                 }`}
               >
-                Admin
+                {t('nav.admin')}
               </Link>
             )}
           </nav>
 
-          {/* Auth Buttons / User Menu */}
+          {/* Auth Buttons / User Menu / Language Selector */}
           <div className="flex items-center space-x-3">
+            <LanguageSelector />
+            
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -169,26 +174,26 @@ const Navbar: React.FC = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="flex cursor-pointer items-center">
                       <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
+                      <span>{t('nav.profile')}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/quests" className="flex cursor-pointer items-center">
                       <Map className="mr-2 h-4 w-4" />
-                      <span>My Quests</span>
+                      <span>{t('nav.myQuests')}</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/passport" className="flex cursor-pointer items-center">
                       <ScrollText className="mr-2 h-4 w-4" />
-                      <span>Passport</span>
+                      <span>{t('nav.passport')}</span>
                     </Link>
                   </DropdownMenuItem>
                   {isAdmin && (
                     <DropdownMenuItem asChild>
                       <Link to="/admin" className="flex cursor-pointer items-center">
                         <Shield className="mr-2 h-4 w-4" />
-                        <span>Admin Panel</span>
+                        <span>{t('nav.admin')}</span>
                       </Link>
                     </DropdownMenuItem>
                   )}
@@ -198,13 +203,13 @@ const Navbar: React.FC = () => {
                     onClick={handleLogout}
                   >
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Logout</span>
+                    <span>{t('nav.logout')}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <Button asChild variant="default" size="sm" className="rounded-full">
-                <Link to="/auth">Sign In</Link>
+                <Link to="/auth">{t('nav.signin')}</Link>
               </Button>
             )}
             
@@ -238,7 +243,7 @@ const Navbar: React.FC = () => {
               >
                 <div className="flex items-center space-x-3">
                   <Home className="h-5 w-5" />
-                  <span>Home</span>
+                  <span>{t('nav.home')}</span>
                 </div>
               </Link>
               <Link 
@@ -249,7 +254,7 @@ const Navbar: React.FC = () => {
               >
                 <div className="flex items-center space-x-3">
                   <Map className="h-5 w-5" />
-                  <span>Quests</span>
+                  <span>{t('nav.quests')}</span>
                 </div>
               </Link>
               <Link 
@@ -260,7 +265,7 @@ const Navbar: React.FC = () => {
               >
                 <div className="flex items-center space-x-3">
                   <ScrollText className="h-5 w-5" />
-                  <span>Stories</span>
+                  <span>{t('nav.stories')}</span>
                 </div>
               </Link>
               <Link 
@@ -271,7 +276,7 @@ const Navbar: React.FC = () => {
               >
                 <div className="flex items-center space-x-3">
                   <Trophy className="h-5 w-5" />
-                  <span>Routes</span>
+                  <span>{t('nav.routes')}</span>
                 </div>
               </Link>
               <Link 
@@ -282,7 +287,7 @@ const Navbar: React.FC = () => {
               >
                 <div className="flex items-center space-x-3">
                   <Compass className="h-5 w-5" />
-                  <span>Explore</span>
+                  <span>{t('nav.explore')}</span>
                 </div>
               </Link>
               {isAuthenticated && (
@@ -295,7 +300,7 @@ const Navbar: React.FC = () => {
                   >
                     <div className="flex items-center space-x-3">
                       <User className="h-5 w-5" />
-                      <span>Profile</span>
+                      <span>{t('nav.profile')}</span>
                     </div>
                   </Link>
                   <Link 
@@ -306,7 +311,7 @@ const Navbar: React.FC = () => {
                   >
                     <div className="flex items-center space-x-3">
                       <ScrollText className="h-5 w-5" />
-                      <span>Passport</span>
+                      <span>{t('nav.passport')}</span>
                     </div>
                   </Link>
                 </>
@@ -320,7 +325,7 @@ const Navbar: React.FC = () => {
                 >
                   <div className="flex items-center space-x-3">
                     <Shield className="h-5 w-5" />
-                    <span>Admin Panel</span>
+                    <span>{t('nav.admin')}</span>
                   </div>
                 </Link>
               )}

@@ -10,12 +10,15 @@ import {
   Settings, 
   LogOut,
   ChevronRight,
-  Menu
+  Menu,
+  Globe
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
+import LanguageSelector from '@/components/LanguageSelector';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -24,45 +27,46 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const location = useLocation();
   const { logout } = useAuth();
+  const { t } = useLanguage();
   const { toast } = useToast();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   const handleLogout = () => {
     logout();
     toast({
-      title: "Logged out",
+      title: t('nav.logout'),
       description: "You have been successfully logged out",
     });
   };
 
   const menuItems = [
     { 
-      title: 'Dashboard', 
+      title: t('admin.dashboard'), 
       path: '/admin', 
       icon: <LayoutDashboard className="h-5 w-5" /> 
     },
     { 
-      title: 'Stories', 
+      title: t('admin.stories'), 
       path: '/admin/stories', 
       icon: <ScrollText className="h-5 w-5" /> 
     },
     { 
-      title: 'Routes', 
+      title: t('admin.routes'), 
       path: '/admin/routes', 
       icon: <Map className="h-5 w-5" /> 
     },
     { 
-      title: 'Quests', 
+      title: t('admin.quests'), 
       path: '/admin/quests', 
       icon: <Trophy className="h-5 w-5" /> 
     },
     { 
-      title: 'Users', 
+      title: t('admin.users'), 
       path: '/admin/users', 
       icon: <Users className="h-5 w-5" /> 
     },
     { 
-      title: 'Settings', 
+      title: t('admin.settings'), 
       path: '/admin/settings', 
       icon: <Settings className="h-5 w-5" /> 
     },
@@ -112,6 +116,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         </nav>
         
         <div className="p-4">
+          {!isCollapsed && (
+            <div className="mb-3 flex justify-center">
+              <LanguageSelector />
+            </div>
+          )}
+          
           <Link to="/">
             <Button 
               variant="outline" 
@@ -122,7 +132,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               ) : (
                 <>
                   <ChevronRight className="mr-2 h-4 w-4" />
-                  Back to Site
+                  {t('admin.backToSite')}
                 </>
               )}
             </Button>
@@ -138,7 +148,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             ) : (
               <>
                 <LogOut className="mr-2 h-4 w-4" />
-                Logout
+                {t('nav.logout')}
               </>
             )}
           </Button>
