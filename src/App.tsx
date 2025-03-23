@@ -25,6 +25,10 @@ import Explore from "./pages/Explore";
 import AdminPanel from "./pages/admin/AdminPanel";
 import AdminLoginButton from "./components/AdminLoginButton";
 
+// Import any additional admin routes
+// import StoriesManager from "./pages/admin/StoriesManager";
+// import QuestsManager from "./pages/admin/QuestsManager";
+
 const queryClient = new QueryClient();
 
 // AnimatedRoutes component to handle page transitions
@@ -45,7 +49,10 @@ const AnimatedRoutes = () => {
         <Route path="/routes/:id" element={<MainLayout><ModelRouteDetails /></MainLayout>} />
         <Route path="/passport" element={<MainLayout><Passport /></MainLayout>} />
         <Route path="/explore" element={<MainLayout><Explore /></MainLayout>} />
+        
+        {/* Admin Panel Routes */}
         <Route path="/admin/*" element={<AdminPanel />} />
+        
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<MainLayout><NotFound /></MainLayout>} />
       </Routes>
