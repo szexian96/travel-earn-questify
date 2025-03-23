@@ -1,13 +1,17 @@
 
 /// <reference types="vite/client" />
-/// <reference types="@testing-library/jest-dom" />
 
-// This extends the Jest matchers with custom DOM matchers
-declare namespace jest {
-  interface Matchers<R> {
-    toBeInTheDocument(): R;
-    toBeVisible(): R;
-    toHaveTextContent(text: string | RegExp): R;
-    toHaveClass(className: string): R;
+// Extend Jest matchers for DOM testing
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toBeInTheDocument(): R;
+      toBeVisible(): R;
+      toHaveTextContent(text: string): R;
+      toHaveClass(className: string): R;
+    }
   }
 }
+
+// Ensure the module can be imported
+export {};

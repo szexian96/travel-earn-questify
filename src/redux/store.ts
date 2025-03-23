@@ -1,36 +1,23 @@
 
-import { configureStore, Middleware, AnyAction } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+import usersReducer from './slices/usersSlice';
+import questsReducer from './slices/questsSlice';
 import storiesReducer from './slices/storiesSlice';
 import modelRoutesReducer from './slices/modelRoutesSlice';
-import questsReducer from './slices/questsSlice';
-import usersReducer from './slices/usersSlice';
-
-// Middleware for logging actions (helps with debugging)
-const loggerMiddleware: Middleware = store => next => action => {
-  // Type guard to check if action has a type property
-  // We need to cast action as object to check for the type property
-  const actionType = action && typeof action === 'object' && 'type' in action 
-    ? (action as AnyAction).type 
-    : 'Unknown action';
-  
-  console.group(`Redux Action: ${actionType}`);
-  console.info('Dispatching:', action);
-  const result = next(action);
-  console.log('Next state:', store.getState());
-  console.groupEnd();
-  return result;
-};
+import socialMediaReducer from './slices/socialMediaSlice';
 
 export const store = configureStore({
   reducer: {
+    users: usersReducer,
+    quests: questsReducer,
     stories: storiesReducer,
     modelRoutes: modelRoutesReducer,
-    quests: questsReducer,
-    users: usersReducer,
+    socialMedia: socialMediaReducer,
   },
-  middleware: (getDefaultMiddleware) => 
-    getDefaultMiddleware().concat(loggerMiddleware),
-  devTools: process.env.NODE_ENV !== 'production',
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
