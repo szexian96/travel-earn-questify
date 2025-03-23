@@ -7,6 +7,8 @@ import { AuthProvider } from '@/context/AuthContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { Provider } from 'react-redux';
 import { store } from '../redux/store';
+import userEvent from '@testing-library/user-event';
+import { describe, test, expect } from '@jest/globals';
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient({
@@ -38,3 +40,4 @@ const customRender = (
 // re-export everything
 export * from '@testing-library/react';
 export { customRender as render };
+export { userEvent, describe, test, expect };

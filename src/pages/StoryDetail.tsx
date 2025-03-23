@@ -18,7 +18,8 @@ import { useToast } from '@/hooks/use-toast';
 import MakimonoStoryScroll from '@/components/MakimonoStoryScroll';
 import StoryChaptersNav, { StoryChapter } from '@/components/StoryChaptersNav';
 import CharacterProfile, { Character } from '@/components/CharacterProfile';
-import WorldLoreEntry, { WorldLoreEntry } from '@/components/WorldLoreEntry';
+import WorldLoreEntry from '@/components/WorldLoreEntry';
+import type { WorldLoreEntry as WorldLoreEntryType } from '@/components/WorldLoreEntry';
 
 // Mock data for the story details
 const mockStory = {
@@ -119,7 +120,7 @@ const mockCharacters: Character[] = [
 ];
 
 // Mock world lore entries
-const mockWorldLore: WorldLoreEntry[] = [
+const mockWorldLore: WorldLoreEntryType[] = [
   {
     id: '1',
     titleEn: 'Heian Period Architecture',
