@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
-import { LanguageSelector } from '@/components/LanguageSelector';
 import { ChevronsLeft, LayoutDashboard, Map, ScrollText, Users, MessageSquare, Bell, Settings, LogOut, MenuIcon, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import LanguageSelector from '@/components/LanguageSelector';
 
 interface AdminLayoutProps {
   children: React.ReactNode;

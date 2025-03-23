@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const mockUser: User = {
         id: `user-${Math.random().toString(36).substring(2, 9)}`,
         username: `traveler_${Math.floor(Math.random() * 1000)}`,
-        avatar: `https://ui-avatars.com/api/?name=Travel+User&background=random`,
+        avatar: "https://ui-avatars.com/api/?name=Travel+User&background=random",
         authProvider: provider,
         points: 0,
         premium: false
