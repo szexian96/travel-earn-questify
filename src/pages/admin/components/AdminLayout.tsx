@@ -18,16 +18,14 @@ import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useAuth } from '@/context/AuthContext';
+import { useMobile } from '@/hooks/use-mobile';
 
 const AdminLayout: React.FC = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const isMobile = useIsMobile();
-  const { logout } = useAuth();
+  const isMobile = useMobile();
 
   const navItems = [
     { label: t('admin.dashboard'), path: '/admin', icon: LayoutDashboard },
@@ -38,7 +36,7 @@ const AdminLayout: React.FC = () => {
   ];
   
   const handleLogout = () => {
-    logout();
+    console.log('Logging out...');
     navigate('/');
   };
   

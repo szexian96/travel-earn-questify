@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
@@ -9,9 +8,6 @@ const mockLogin = jest.fn();
 const mockContextValue = {
   login: mockLogin,
   isLoading: false,
-  logout: jest.fn(),
-  isAuthenticated: false,
-  user: null
 };
 
 describe('AuthButtons', () => {

@@ -1,3 +1,4 @@
+
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
@@ -23,7 +24,10 @@ import Passport from "./pages/Passport";
 import Explore from "./pages/Explore";
 import AdminPanel from "./pages/admin/AdminPanel";
 import AdminLoginButton from "./components/AdminLoginButton";
-import PerkShop from "./components/PerkShop";
+
+// Import any additional admin routes
+// import StoriesManager from "./pages/admin/StoriesManager";
+// import QuestsManager from "./pages/admin/QuestsManager";
 
 const queryClient = new QueryClient();
 
@@ -45,7 +49,6 @@ const AnimatedRoutes = () => {
         <Route path="/routes/:id" element={<MainLayout><ModelRouteDetails /></MainLayout>} />
         <Route path="/passport" element={<MainLayout><Passport /></MainLayout>} />
         <Route path="/explore" element={<MainLayout><Explore /></MainLayout>} />
-        <Route path="/shop" element={<MainLayout><PerkShop /></MainLayout>} />
         
         {/* Admin Panel Routes */}
         <Route path="/admin/*" element={<AdminPanel />} />

@@ -11,7 +11,7 @@ describe('Navbar Component', () => {
 
   test('renders logo', () => {
     render(<Navbar />);
-    const logo = screen.getByText(/Tourii/i);
+    const logo = screen.getByText(/questify/i);
     expect(logo).toBeInTheDocument();
   });
 
@@ -19,12 +19,14 @@ describe('Navbar Component', () => {
     render(<Navbar />);
     const menuButton = screen.getByRole('button', { name: /menu/i });
     
+    // Menu should be closed initially
+    expect(screen.queryByRole('navigation')).not.toBeVisible();
+    
     // Click the menu button
     await userEvent.click(menuButton);
     
     // Menu should be visible now
-    const navigation = screen.getByRole('navigation');
-    expect(navigation).toBeVisible();
+    expect(screen.getByRole('navigation')).toBeVisible();
   });
 
   test('navigates to different pages', () => {

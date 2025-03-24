@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import AdminLayout from './components/AdminLayout';
 import Dashboard from './components/Dashboard';
 import QuestsManagement from './components/QuestsManagement';
@@ -11,6 +11,8 @@ import SocialMediaManagement from './components/SocialMediaManagement';
 
 // Admin Panel component that handles routing for admin pages
 const AdminPanel = () => {
+  const navigate = useNavigate();
+
   return (
     <AdminLayout>
       <Routes>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
@@ -9,33 +8,20 @@ import {
   Map, 
   FileText, 
   Globe,
+  BookOpen,
   Video,
   Download
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import MakimonoStoryScroll from '@/components/MakimonoStoryScroll';
 import StoryChaptersNav, { StoryChapter } from '@/components/StoryChaptersNav';
 import CharacterProfile, { Character } from '@/components/CharacterProfile';
 import WorldLoreEntry from '@/components/WorldLoreEntry';
+import type { WorldLoreEntry as WorldLoreEntryType } from '@/components/WorldLoreEntry';
 
-interface WorldLoreEntryType {
-  id: string;
-  titleEn: string;
-  titleJp: string;
-  categoryEn: string;
-  categoryJp: string;
-  contentEn: string;
-  contentJp: string;
-  imageUrl: string;
-  relatedLocations: {
-    nameEn: string;
-    nameJp: string;
-    id: string;
-  }[];
-  tags: string[];
-}
-
+// Mock data for the story details
 const mockStory = {
   id: '1',
   titleEn: 'The Lost Temple of Kyoto',
@@ -54,6 +40,7 @@ const mockStory = {
   updatedAt: '2023-07-10T14:20:00Z'
 };
 
+// Mock chapters data
 const mockChapters: StoryChapter[] = [
   {
     id: '1',
@@ -100,6 +87,7 @@ const mockChapters: StoryChapter[] = [
   }
 ];
 
+// Mock characters data
 const mockCharacters: Character[] = [
   {
     id: '1',
@@ -133,6 +121,7 @@ const mockCharacters: Character[] = [
   }
 ];
 
+// Mock world lore entries
 const mockWorldLore: WorldLoreEntryType[] = [
   {
     id: '1',
@@ -188,7 +177,7 @@ const StoryDetail: React.FC = () => {
   const [worldLore, setWorldLore] = useState<WorldLoreEntryType[]>([]);
   const [activeTab, setActiveTab] = useState('story');
   const [selectedChapterId, setSelectedChapterId] = useState('');
-  const [viewMode, setViewMode] = useState<'video' | 'pdf'>('pdf');
+  const [viewMode, setViewMode] = useState<'text' | 'video' | 'pdf'>('text');
 
   useEffect(() => {
     const loadStory = async () => {
@@ -217,6 +206,7 @@ const StoryDetail: React.FC = () => {
   const selectedChapter = chapters.find(ch => ch.id === selectedChapterId) || chapters[0];
 
   const title = language === 'en' ? story.titleEn : story.titleJp;
+  const content = language === 'en' ? story.contentEn : story.contentJp;
   const videoUrl = language === 'en' ? story.videoUrlEn : story.videoUrlJp;
   const pdfUrl = language === 'en' ? story.pdfUrlEn : story.pdfUrlJp;
 
@@ -299,6 +289,15 @@ const StoryDetail: React.FC = () => {
               <div className="lg:col-span-3">
                 <div className="mb-4">
                   <TabsList className="mb-6">
+                    <TabsTrigger 
+                      value="text" 
+                      onClick={() => setViewMode('text')}
+                      className={viewMode === 'text' ? 'bg-primary text-primary-foreground' : ''}
+                    >
+                      <BookOpen className="mr-2 h-4 w-4" />
+                      Text View
+                    </TabsTrigger>
+                    
                     {videoUrl && (
                       <TabsTrigger 
                         value="video" 
@@ -310,16 +309,30 @@ const StoryDetail: React.FC = () => {
                       </TabsTrigger>
                     )}
                     
-                    <TabsTrigger 
-                      value="pdf" 
-                      onClick={() => setViewMode('pdf')}
-                      className={viewMode === 'pdf' ? 'bg-primary text-primary-foreground' : ''}
-                    >
-                      <FileText className="mr-2 h-4 w-4" />
-                      Storybook (PDF)
-                    </TabsTrigger>
+                    {pdfUrl && (
+                      <TabsTrigger 
+                        value="pdf" 
+                        onClick={() => setViewMode('pdf')}
+                        className={viewMode === 'pdf' ? 'bg-primary text-primary-foreground' : ''}
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        PDF
+                      </TabsTrigger>
+                    )}
                   </TabsList>
                 </div>
+                
+                {viewMode === 'text' && (
+                  <MakimonoStoryScroll
+                    storyTitle={
+                      selectedChapterId ? 
+                      (language === 'en' ? selectedChapter.titleEn : selectedChapter.titleJp) : 
+                      title
+                    }
+                    storyText={content}
+                    isVerticalScroll={language === 'jp'}
+                  />
+                )}
                 
                 {viewMode === 'video' && videoUrl && (
                   <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden border border-border">
@@ -328,21 +341,21 @@ const StoryDetail: React.FC = () => {
                       title={title}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                       allowFullScreen
-                      className="w-full h-full min-h-[400px]"
+                      className="w-full h-full"
                     />
                   </div>
                 )}
                 
-                {viewMode === 'pdf' && (
+                {viewMode === 'pdf' && pdfUrl && (
                   <div className="bg-secondary/20 rounded-lg overflow-hidden border border-border/50 p-8 text-center">
                     <FileText className="h-16 w-16 mx-auto mb-4 text-primary/50" />
-                    <h3 className="text-xl font-medium mb-2">Storybook Available</h3>
+                    <h3 className="text-xl font-medium mb-2">PDF Document Available</h3>
                     <p className="text-muted-foreground mb-6">
-                      View or download the PDF storybook version
+                      View or download the PDF version of this story
                     </p>
                     <Button onClick={handleViewPdf}>
                       <Download className="mr-2 h-4 w-4" />
-                      View Storybook
+                      View PDF
                     </Button>
                   </div>
                 )}
