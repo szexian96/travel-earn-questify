@@ -1,148 +1,182 @@
 
-import React, { useState } from 'react';
-import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Route, 
-  ScrollText, 
-  Users, 
-  MessageSquare, 
-  LogOut, 
-  ChevronLeft, 
-  ChevronRight,
-  Menu
-} from 'lucide-react';
-
-import LanguageSelector from '@/components/LanguageSelector';
+import type React from 'react';
+import { useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
+import { ChevronsLeft, LayoutDashboard, Map, ScrollText, Users, MessageSquare, Bell, Settings, LogOut, MenuIcon, Share } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { useMobile } from '@/hooks/use-mobile';
+import LanguageSelector from '@/components/LanguageSelector';
 
-const AdminLayout: React.FC = () => {
+interface AdminLayoutProps {
+  children: React.ReactNode;
+}
+
+const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { t } = useLanguage();
-  const navigate = useNavigate();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const isMobile = useMobile();
+
+  const isActive = (path: string) => location.pathname === path || location.pathname.startsWith(`${path}/`);
 
   const navItems = [
-    { label: t('admin.dashboard'), path: '/admin', icon: LayoutDashboard },
-    { label: t('admin.routes'), path: '/admin/routes', icon: Route },
-    { label: t('admin.stories'), path: '/admin/stories', icon: ScrollText },
-    { label: t('admin.users'), path: '/admin/users', icon: Users },
-    { label: t('admin.social'), path: '/admin/social', icon: MessageSquare },
+    { path: '/admin', label: t('admin.dashboard'), icon: <LayoutDashboard size={20} /> },
+    { path: '/admin/quests', label: t('admin.quests'), icon: <Bell size={20} /> },
+    { path: '/admin/stories', label: t('admin.stories'), icon: <ScrollText size={20} /> },
+    { path: '/admin/routes', label: t('admin.routes'), icon: <Map size={20} /> },
+    { path: '/admin/users', label: t('admin.users'), icon: <Users size={20} /> },
+    { path: '/admin/social', label: t('admin.social'), icon: <Share size={20} /> },
   ];
-  
-  const handleLogout = () => {
-    console.log('Logging out...');
-    navigate('/');
-  };
-  
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-  
-  const Sidebar = () => (
-    <aside className={cn(
-      "h-screen bg-card border-r flex flex-col transition-all duration-300 z-20",
-      isCollapsed ? "w-[70px]" : "w-[240px]"
-    )}>
-      <div className="p-4 border-b flex items-center justify-between">
-        <h1 className={cn("font-semibold transition-opacity", 
-          isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
-        )}>
-          {t('admin.title')}
-        </h1>
-        <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-          {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-        </Button>
-      </div>
-      
-      <nav className="flex-1 py-4">
-        <ul className="space-y-1 px-2">
-          {navItems.map((item) => (
-            <li key={item.path}>
-              <NavLink
-                to={item.path}
-                end={item.path === '/admin'}
-                className={({ isActive }) => cn(
-                  "flex items-center py-2 px-3 rounded-md transition-colors",
-                  isActive ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary/50",
-                )}
-              >
-                <item.icon size={18} className="flex-shrink-0" />
-                <span className={cn(
-                  "ml-3 transition-opacity duration-200",
-                  isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
-                )}>
-                  {item.label}
-                </span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      
-      <div className="p-4 border-t mt-auto">
-        <Button 
-          variant="ghost" 
-          className={cn(
-            "w-full justify-start text-muted-foreground hover:text-foreground",
-            isCollapsed && "justify-center px-0"
-          )}
-          onClick={handleLogout}
-        >
-          <LogOut size={18} />
-          <span className={cn(
-            "ml-3", 
-            isCollapsed ? "hidden" : "block"
-          )}>
-            {t('admin.logout')}
-          </span>
-        </Button>
-      </div>
-    </aside>
-  );
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      {isMobile ? (
-        <>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="fixed top-4 left-4 z-50 lg:hidden">
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-[240px]">
-              <Sidebar />
-            </SheetContent>
-          </Sheet>
-          <main className="flex-1 overflow-y-auto pt-16 px-4 pb-4">
-            <div className="absolute top-4 right-4">
-              <LanguageSelector />
-            </div>
-            <Outlet />
-          </main>
-        </>
-      ) : (
-        <>
-          <Sidebar />
-          <main className={cn(
-            "flex-1 overflow-y-auto transition-all duration-300 relative",
-            isCollapsed ? "ml-[70px]" : "ml-[240px]"
-          )}>
-            <div className="p-6">
-              <div className="absolute top-6 right-6">
-                <LanguageSelector />
+    <div className="min-h-screen bg-background flex">
+      {/* Sidebar for desktop */}
+      <aside 
+        className={cn(
+          "fixed inset-y-0 z-50 bg-background border-r border-border transition-all duration-300 hidden md:flex md:flex-col",
+          sidebarCollapsed ? "w-[70px]" : "w-[240px]"
+        )}
+      >
+        <div className="flex items-center p-4 h-16 border-b border-border">
+          <div className={cn("font-semibold text-lg flex items-center", sidebarCollapsed && "hidden")}>
+            <span className="text-primary">Tourii</span>
+            <span className="ml-1">Admin</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn("ml-auto", !sidebarCollapsed && "ml-auto")}
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          >
+            <ChevronsLeft 
+              className={cn("transition-transform", sidebarCollapsed && "rotate-180")} 
+              size={20} 
+            />
+          </Button>
+        </div>
+        
+        <nav className="flex-1 overflow-y-auto px-3 py-2">
+          <ul className="space-y-1">
+            {navItems.map((item) => (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) => cn(
+                    "flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                    isActive 
+                      ? "bg-primary text-primary-foreground" 
+                      : "hover:bg-secondary text-muted-foreground"
+                  )}
+                >
+                  <span className="mr-3">{item.icon}</span>
+                  <span className={cn(sidebarCollapsed && "hidden")}>{item.label}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        
+        <div className="border-t border-border p-3">
+          <div className={cn("flex items-center mb-3", sidebarCollapsed && "justify-center")}>
+            <LanguageSelector className={cn(sidebarCollapsed && "w-full p-0")} />
+          </div>
+          <NavLink 
+            to="/"
+            className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-600/10 transition-colors"
+          >
+            <LogOut size={20} className="mr-3" />
+            <span className={cn(sidebarCollapsed && "hidden")}>Exit Admin</span>
+          </NavLink>
+        </div>
+      </aside>
+      
+      {/* Mobile header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-background border-b border-border h-16 flex items-center px-4">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="mr-3"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          <MenuIcon size={20} />
+        </Button>
+        <div className="font-semibold text-lg">
+          <span className="text-primary">Tourii</span>
+          <span className="ml-1">Admin</span>
+        </div>
+        <div className="ml-auto">
+          <LanguageSelector />
+        </div>
+      </div>
+      
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
+          <div className="fixed inset-y-0 left-0 w-3/4 max-w-xs bg-background border-r border-border p-6">
+            <div className="flex items-center justify-between mb-8">
+              <div className="font-semibold text-lg">
+                <span className="text-primary">Tourii</span>
+                <span className="ml-1">Admin</span>
               </div>
-              <Outlet />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <ChevronsLeft size={20} />
+              </Button>
             </div>
-          </main>
-        </>
+            
+            <nav>
+              <ul className="space-y-3">
+                {navItems.map((item) => (
+                  <li key={item.path}>
+                    <NavLink
+                      to={item.path}
+                      className={({ isActive }) => cn(
+                        "flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                        isActive 
+                          ? "bg-primary text-primary-foreground" 
+                          : "hover:bg-secondary text-muted-foreground"
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <span className="mr-3">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </NavLink>
+                  </li>
+                ))}
+                <li>
+                  <NavLink 
+                    to="/"
+                    className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-600/10 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <LogOut size={20} className="mr-3" />
+                    <span>Exit Admin</span>
+                  </NavLink>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          
+          <div 
+            className="fixed inset-0 bg-transparent" 
+            onClick={() => setMobileMenuOpen(false)}
+          ></div>
+        </div>
       )}
+      
+      {/* Main content */}
+      <main className={cn(
+        "flex-1 overflow-auto transition-all duration-300 p-4 pb-16 md:p-8",
+        "md:ml-[240px]",
+        sidebarCollapsed && "md:ml-[70px]"
+      )}>
+        <div className="md:hidden h-16"></div>
+        {children}
+      </main>
     </div>
   );
 };

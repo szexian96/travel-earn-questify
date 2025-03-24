@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { ScrollText, Video, Map, Check, X, Plus, Image, FileText, Upload } from 'lucide-react';
+import { ScrollText, Video, Map, Check, X, Plus, Image } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -47,8 +47,8 @@ const StoryCreationForm: React.FC<StoryCreationFormProps> = ({
     thumbnailUrl: '',
     videoUrlEn: '',
     videoUrlJp: '',
-    pdfUrlEn: '',
-    pdfUrlJp: '',
+    contentEn: '',
+    contentJp: '',
     isPublished: false,
     relatedRouteId: '',
     tags: [],
@@ -132,6 +132,21 @@ const StoryCreationForm: React.FC<StoryCreationFormProps> = ({
             </div>
             
             <div>
+              <Label htmlFor="contentEn">English Story Content</Label>
+              <Textarea
+                id="contentEn"
+                name="contentEn"
+                value={storyData.contentEn}
+                onChange={handleChange}
+                placeholder="Enter full story content in English"
+                rows={8}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Use double line breaks to separate paragraphs.
+              </p>
+            </div>
+            
+            <div>
               <Label htmlFor="videoUrlEn">English Video URL</Label>
               <Input
                 id="videoUrlEn"
@@ -140,27 +155,6 @@ const StoryCreationForm: React.FC<StoryCreationFormProps> = ({
                 onChange={handleChange}
                 placeholder="Enter YouTube or video URL for English version"
               />
-            </div>
-            
-            <div>
-              <Label htmlFor="pdfUrlEn">English PDF Document</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="pdfUrlEn"
-                  name="pdfUrlEn"
-                  value={storyData.pdfUrlEn}
-                  onChange={handleChange}
-                  placeholder="Upload or enter PDF URL for English version"
-                  className="flex-1"
-                />
-                <Button type="button" variant="secondary" size="sm">
-                  <Upload className="h-4 w-4 mr-2" />
-                  Upload
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Upload a PDF version of the story or provide a URL
-              </p>
             </div>
           </div>
         </TabsContent>
@@ -194,6 +188,21 @@ const StoryCreationForm: React.FC<StoryCreationFormProps> = ({
             </div>
             
             <div>
+              <Label htmlFor="contentJp">Japanese Story Content</Label>
+              <Textarea
+                id="contentJp"
+                name="contentJp"
+                value={storyData.contentJp}
+                onChange={handleChange}
+                placeholder="日本語でストーリーの内容を入力"
+                rows={8}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                段落を分けるには、二重の改行を使用してください。
+              </p>
+            </div>
+            
+            <div>
               <Label htmlFor="videoUrlJp">Japanese Video URL</Label>
               <Input
                 id="videoUrlJp"
@@ -202,27 +211,6 @@ const StoryCreationForm: React.FC<StoryCreationFormProps> = ({
                 onChange={handleChange}
                 placeholder="日本語版の動画URLを入力"
               />
-            </div>
-            
-            <div>
-              <Label htmlFor="pdfUrlJp">Japanese PDF Document</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="pdfUrlJp"
-                  name="pdfUrlJp"
-                  value={storyData.pdfUrlJp}
-                  onChange={handleChange}
-                  placeholder="日本語版のPDF URLをアップロードまたは入力"
-                  className="flex-1"
-                />
-                <Button type="button" variant="secondary" size="sm">
-                  <Upload className="h-4 w-4 mr-2" />
-                  アップロード
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                ストーリーのPDFバージョンをアップロードするか、URLを提供してください
-              </p>
             </div>
           </div>
         </TabsContent>
