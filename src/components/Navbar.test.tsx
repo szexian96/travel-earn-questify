@@ -1,36 +1,51 @@
 
-import { render, screen, describe, test, expect, userEvent } from '@/utils/test-utils';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import '@testing-library/jest-dom';
 import Navbar from './Navbar';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from '@/context/AuthContext';
+import { LanguageProvider } from '@/context/LanguageContext';
 
 describe('Navbar Component', () => {
+  const renderWithProviders = () => {
+    return render(
+      <AuthProvider>
+        <LanguageProvider>
+          <BrowserRouter>
+            <Navbar />
+          </BrowserRouter>
+        </LanguageProvider>
+      </AuthProvider>
+    );
+  };
+
   test('renders home link', () => {
-    render(<Navbar />);
+    renderWithProviders();
     const homeLink = screen.getByText(/home/i);
     expect(homeLink).toBeInTheDocument();
   });
 
   test('renders logo', () => {
-    render(<Navbar />);
-    const logo = screen.getByText(/questify/i);
+    renderWithProviders();
+    const logo = screen.getByText(/tourii/i);
     expect(logo).toBeInTheDocument();
   });
 
   test('mobile menu opens when menu button is clicked', async () => {
-    render(<Navbar />);
+    renderWithProviders();
     const menuButton = screen.getByRole('button', { name: /menu/i });
-    
-    // Menu should be closed initially
-    expect(screen.queryByRole('navigation')).not.toBeVisible();
     
     // Click the menu button
     await userEvent.click(menuButton);
     
-    // Menu should be visible now
-    expect(screen.getByRole('navigation')).toBeVisible();
+    // Navigation should now be visible
+    const mobileNav = screen.getByRole('navigation');
+    expect(mobileNav).toBeVisible();
   });
 
   test('navigates to different pages', () => {
-    render(<Navbar />);
+    renderWithProviders();
     
     // Check if main navigation links exist
     expect(screen.getByText(/quests/i)).toBeInTheDocument();

@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { store } from '../redux/store';
 import userEvent from '@testing-library/user-event';
 import { describe, test, expect } from '@jest/globals';
+import '@testing-library/jest-dom';
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient({

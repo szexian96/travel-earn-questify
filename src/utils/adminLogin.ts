@@ -3,10 +3,31 @@ import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 export const useAdminLogin = () => {
-  const { login } = useAuth();
+  // Get the auth context - this will throw an error if not within AuthProvider
+  // so we need to handle this case properly
+  let login;
+  let authError = false;
+  
+  try {
+    const auth = useAuth();
+    login = auth.login;
+  } catch (error) {
+    authError = true;
+    console.error("Auth context not available:", error);
+  }
+
   const { toast } = useToast();
 
   const loginAsAdmin = async () => {
+    if (authError) {
+      toast({
+        title: "Authentication Error",
+        description: "Please refresh the page and try again",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     try {
       await login('google');
       // Update the user in localStorage to have admin credentials
