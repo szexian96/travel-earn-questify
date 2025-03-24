@@ -15,11 +15,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import MakimonoStoryScroll from '@/components/MakimonoStoryScroll';
 import StoryChaptersNav, { StoryChapter } from '@/components/StoryChaptersNav';
 import CharacterProfile, { Character } from '@/components/CharacterProfile';
 import WorldLoreEntry from '@/components/WorldLoreEntry';
-import type { WorldLoreEntry as WorldLoreEntryType } from '@/components/WorldLoreEntry';
+import type { WorldLoreEntryType } from '@/components/WorldLoreEntry';
 
 // Mock data for the story details
 const mockStory = {
@@ -177,7 +176,7 @@ const StoryDetail: React.FC = () => {
   const [worldLore, setWorldLore] = useState<WorldLoreEntryType[]>([]);
   const [activeTab, setActiveTab] = useState('story');
   const [selectedChapterId, setSelectedChapterId] = useState('');
-  const [viewMode, setViewMode] = useState<'text' | 'video' | 'pdf'>('text');
+  const [viewMode, setViewMode] = useState<'video' | 'pdf'>('pdf');
 
   useEffect(() => {
     const loadStory = async () => {
@@ -206,7 +205,6 @@ const StoryDetail: React.FC = () => {
   const selectedChapter = chapters.find(ch => ch.id === selectedChapterId) || chapters[0];
 
   const title = language === 'en' ? story.titleEn : story.titleJp;
-  const content = language === 'en' ? story.contentEn : story.contentJp;
   const videoUrl = language === 'en' ? story.videoUrlEn : story.videoUrlJp;
   const pdfUrl = language === 'en' ? story.pdfUrlEn : story.pdfUrlJp;
 
@@ -289,15 +287,6 @@ const StoryDetail: React.FC = () => {
               <div className="lg:col-span-3">
                 <div className="mb-4">
                   <TabsList className="mb-6">
-                    <TabsTrigger 
-                      value="text" 
-                      onClick={() => setViewMode('text')}
-                      className={viewMode === 'text' ? 'bg-primary text-primary-foreground' : ''}
-                    >
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      Text View
-                    </TabsTrigger>
-                    
                     {videoUrl && (
                       <TabsTrigger 
                         value="video" 
@@ -309,30 +298,16 @@ const StoryDetail: React.FC = () => {
                       </TabsTrigger>
                     )}
                     
-                    {pdfUrl && (
-                      <TabsTrigger 
-                        value="pdf" 
-                        onClick={() => setViewMode('pdf')}
-                        className={viewMode === 'pdf' ? 'bg-primary text-primary-foreground' : ''}
-                      >
-                        <FileText className="mr-2 h-4 w-4" />
-                        PDF
-                      </TabsTrigger>
-                    )}
+                    <TabsTrigger 
+                      value="pdf" 
+                      onClick={() => setViewMode('pdf')}
+                      className={viewMode === 'pdf' ? 'bg-primary text-primary-foreground' : ''}
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      Storybook (PDF)
+                    </TabsTrigger>
                   </TabsList>
                 </div>
-                
-                {viewMode === 'text' && (
-                  <MakimonoStoryScroll
-                    storyTitle={
-                      selectedChapterId ? 
-                      (language === 'en' ? selectedChapter.titleEn : selectedChapter.titleJp) : 
-                      title
-                    }
-                    storyText={content}
-                    isVerticalScroll={language === 'jp'}
-                  />
-                )}
                 
                 {viewMode === 'video' && videoUrl && (
                   <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden border border-border">
@@ -346,16 +321,16 @@ const StoryDetail: React.FC = () => {
                   </div>
                 )}
                 
-                {viewMode === 'pdf' && pdfUrl && (
+                {viewMode === 'pdf' && (
                   <div className="bg-secondary/20 rounded-lg overflow-hidden border border-border/50 p-8 text-center">
                     <FileText className="h-16 w-16 mx-auto mb-4 text-primary/50" />
-                    <h3 className="text-xl font-medium mb-2">PDF Document Available</h3>
+                    <h3 className="text-xl font-medium mb-2">Storybook Available</h3>
                     <p className="text-muted-foreground mb-6">
-                      View or download the PDF version of this story
+                      View or download the PDF storybook version
                     </p>
                     <Button onClick={handleViewPdf}>
                       <Download className="mr-2 h-4 w-4" />
-                      View PDF
+                      View Storybook
                     </Button>
                   </div>
                 )}
