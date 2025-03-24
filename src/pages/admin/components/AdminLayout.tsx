@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ChevronsLeft, LayoutDashboard, Map, ScrollText, Users, MessageSquare, Bell, Settings, LogOut, MenuIcon, Share, Trophy, X } from 'lucide-react';
+import { ChevronsLeft, LayoutDashboard, Map, ScrollText, Users, MessageSquare, Bell, Settings, LogOut, MenuIcon, Share, Trophy, X, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -85,6 +85,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           {navItems.map((item) => (
             <NavItem key={item.path} {...item} />
           ))}
+          
+          {/* Return to Homepage Button - Desktop */}
+          <Link 
+            to="/"
+            className="flex items-center gap-3 px-3 py-2 mt-4 rounded-md transition-colors text-primary hover:bg-secondary"
+          >
+            <Home size={20} />
+            {!sidebarCollapsed && <span>{t('admin.returnToHomepage')}</span>}
+          </Link>
         </nav>
       </aside>
 
@@ -104,6 +113,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </div>
           
           <div className="flex items-center gap-2">
+            {/* Return to Homepage Button - Mobile Header */}
+            <Button variant="ghost" size="icon" asChild>
+              <Link to="/">
+                <Home className="h-5 w-5" />
+              </Link>
+            </Button>
             <Button variant="ghost" size="icon">
               <Bell className="h-5 w-5" />
             </Button>
@@ -118,6 +133,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/">
+                    <Home className="mr-2 h-4 w-4" />
+                    <span>{t('admin.returnToHomepage')}</span>
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
@@ -160,6 +181,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     <span>{item.label}</span>
                   </NavLink>
                 ))}
+                
+                {/* Return to Homepage Button - Mobile Menu */}
+                <Link
+                  to="/"
+                  className="flex items-center gap-3 px-3 py-3 mt-4 rounded-md transition-colors text-primary hover:bg-secondary"
+                  onClick={toggleMobileMenu}
+                >
+                  <Home size={20} />
+                  <span>{t('admin.returnToHomepage')}</span>
+                </Link>
               </nav>
             </div>
           </div>
