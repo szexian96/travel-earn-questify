@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
@@ -8,7 +9,6 @@ import {
   Map, 
   FileText, 
   Globe,
-  BookOpen,
   Video,
   Download
 } from 'lucide-react';
@@ -328,7 +328,7 @@ const StoryDetail: React.FC = () => {
                       title={title}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                       allowFullScreen
-                      className="w-full h-full"
+                      className="w-full h-full min-h-[400px]"
                     />
                   </div>
                 )}
