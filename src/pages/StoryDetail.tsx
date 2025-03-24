@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
@@ -10,7 +9,8 @@ import {
   FileText, 
   Globe,
   BookOpen,
-  Video
+  Video,
+  Download
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -32,6 +32,8 @@ const mockStory = {
   contentJp: `何世紀もの間、京都東部の森深くに隠された寺院についての噂が地元の人々の間で広まっていました。すばらしい宝物が収められていると言う人もいれば、強力な霊が住んでいると主張する人もいました。\n\n1923年になって初めて、探検家の田中博がこの地域をハイキング中に古い石段を偶然発見しました。森の奥へと続くその階段をたどっていくと、後に森林寺（しんりんじ）として知られることになる寺院の遺跡を発見しました。\n\n寺院の建築様式は、9世紀頃の平安時代初期に建てられたことを示唆していました。特に注目すべきは、多くの工芸品が残されたまま、突然放棄されたように見えることでした。\n\n考古学者たちは、森の精霊と交信するために行われた儀式を記述した巻物を発見しました。寺院の本堂には、これらの儀式を描いた精巧な木彫りが施されていました。\n\n今日、寺院の一部は慎重に復元されていますが、発見された当時のままの部分も多く残っています。訪問者は田中と同じ道をハイキングし、森から抜け出してこの隠された歴史的宝物を見つけたときと同じ発見の感覚を体験することができます。`,
   videoUrlEn: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
   videoUrlJp: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+  pdfUrlEn: 'https://example.com/story-en.pdf',
+  pdfUrlJp: 'https://example.com/story-jp.pdf',
   thumbnailUrl: 'https://source.unsplash.com/random/800x600/?temple,kyoto',
   coverImage: 'https://source.unsplash.com/random/1200x600/?temple,japan',
   createdAt: '2023-05-15T09:30:00Z',
@@ -170,22 +172,22 @@ const StoryDetail: React.FC = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [story, setStory] = useState(mockStory);
-  const [chapters, setChapters] = useState(mockChapters);
-  const [characters, setCharacters] = useState(mockCharacters);
-  const [worldLore, setWorldLore] = useState(mockWorldLore);
+  const [chapters, setChapters] = useState<StoryChapter[]>([]);
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [worldLore, setWorldLore] = useState<WorldLoreEntryType[]>([]);
   const [activeTab, setActiveTab] = useState('story');
-  const [selectedChapterId, setSelectedChapterId] = useState(mockChapters[0]?.id);
-
-  // Get the selected chapter
-  const selectedChapter = chapters.find(ch => ch.id === selectedChapterId) || chapters[0];
+  const [selectedChapterId, setSelectedChapterId] = useState('');
+  const [viewMode, setViewMode] = useState<'text' | 'video' | 'pdf'>('text');
 
   useEffect(() => {
-    // Simulate loading story data
     const loadStory = async () => {
       setLoading(true);
       try {
-        // In a real app, fetch the story by id
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setChapters(mockChapters);
+        setCharacters(mockCharacters);
+        setWorldLore(mockWorldLore);
+        setSelectedChapterId(mockChapters[0]?.id || '');
         setLoading(false);
       } catch (error) {
         console.error('Error loading story:', error);
@@ -201,26 +203,25 @@ const StoryDetail: React.FC = () => {
     loadStory();
   }, [id, toast]);
 
-  // Handle chapter selection
-  const handleChapterSelect = (chapterId: string) => {
-    const chapter = chapters.find(ch => ch.id === chapterId);
-    if (chapter && !chapter.isLocked) {
-      setSelectedChapterId(chapterId);
+  const selectedChapter = chapters.find(ch => ch.id === selectedChapterId) || chapters[0];
+
+  const title = language === 'en' ? story.titleEn : story.titleJp;
+  const content = language === 'en' ? story.contentEn : story.contentJp;
+  const videoUrl = language === 'en' ? story.videoUrlEn : story.videoUrlJp;
+  const pdfUrl = language === 'en' ? story.pdfUrlEn : story.pdfUrlJp;
+
+  const handleViewPdf = () => {
+    if (pdfUrl) {
+      window.open(pdfUrl, '_blank');
     } else {
       toast({
-        title: t('story.lockedContent'),
-        description: 'Complete previous chapters to unlock this content',
-        variant: 'default',
+        title: t('story.noPdf'),
+        description: t('story.pdfNotAvailable'),
+        variant: 'destructive',
       });
     }
   };
 
-  // Get localized content
-  const title = language === 'en' ? story.titleEn : story.titleJp;
-  const content = language === 'en' ? story.contentEn : story.contentJp;
-  const videoUrl = language === 'en' ? story.videoUrlEn : story.videoUrlJp;
-
-  // Content animation variants
   const contentVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.5 } }
@@ -228,7 +229,6 @@ const StoryDetail: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 py-10">
-      {/* Story Header */}
       <motion.div 
         className="mb-8"
         initial={{ opacity: 0, y: -20 }}
@@ -253,7 +253,6 @@ const StoryDetail: React.FC = () => {
         </div>
       </motion.div>
       
-      {/* Content Tabs */}
       <div className="flex flex-col">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="w-full max-w-md mx-auto mb-8">
@@ -271,7 +270,6 @@ const StoryDetail: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           
-          {/* Story Content */}
           <TabsContent value="story" className="w-full">
             <motion.div 
               className="grid grid-cols-1 lg:grid-cols-4 gap-8"
@@ -279,45 +277,92 @@ const StoryDetail: React.FC = () => {
               initial="hidden"
               animate="visible"
             >
-              {/* Chapters Navigation Sidebar */}
               <div className="lg:col-span-1">
                 <StoryChaptersNav
                   chapters={chapters}
                   currentChapterId={selectedChapterId}
-                  onChapterSelect={handleChapterSelect}
+                  onChapterSelect={setSelectedChapterId}
+                  className="sticky top-4"
                 />
               </div>
               
-              {/* Main Story Content */}
               <div className="lg:col-span-3">
-                <MakimonoStoryScroll
-                  storyTitle={
-                    selectedChapterId ? 
-                    (language === 'en' ? selectedChapter.titleEn : selectedChapter.titleJp) : 
-                    title
-                  }
-                  storyText={content}
-                  videoUrl={videoUrl}
-                  isVerticalScroll={language === 'jp'}
-                />
-                
-                <div className="mt-6 flex justify-end">
-                  <Button variant="outline" className="mr-3">
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    {t('story.readMore')}
-                  </Button>
-                  {videoUrl && (
-                    <Button>
-                      <Video className="mr-2 h-4 w-4" />
-                      {t('story.watchVideo')}
-                    </Button>
-                  )}
+                <div className="mb-4">
+                  <TabsList className="mb-6">
+                    <TabsTrigger 
+                      value="text" 
+                      onClick={() => setViewMode('text')}
+                      className={viewMode === 'text' ? 'bg-primary text-primary-foreground' : ''}
+                    >
+                      <BookOpen className="mr-2 h-4 w-4" />
+                      Text View
+                    </TabsTrigger>
+                    
+                    {videoUrl && (
+                      <TabsTrigger 
+                        value="video" 
+                        onClick={() => setViewMode('video')}
+                        className={viewMode === 'video' ? 'bg-primary text-primary-foreground' : ''}
+                      >
+                        <Video className="mr-2 h-4 w-4" />
+                        Video
+                      </TabsTrigger>
+                    )}
+                    
+                    {pdfUrl && (
+                      <TabsTrigger 
+                        value="pdf" 
+                        onClick={() => setViewMode('pdf')}
+                        className={viewMode === 'pdf' ? 'bg-primary text-primary-foreground' : ''}
+                      >
+                        <FileText className="mr-2 h-4 w-4" />
+                        PDF
+                      </TabsTrigger>
+                    )}
+                  </TabsList>
                 </div>
+                
+                {viewMode === 'text' && (
+                  <MakimonoStoryScroll
+                    storyTitle={
+                      selectedChapterId ? 
+                      (language === 'en' ? selectedChapter.titleEn : selectedChapter.titleJp) : 
+                      title
+                    }
+                    storyText={content}
+                    isVerticalScroll={language === 'jp'}
+                  />
+                )}
+                
+                {viewMode === 'video' && videoUrl && (
+                  <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden border border-border">
+                    <iframe 
+                      src={videoUrl}
+                      title={title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowFullScreen
+                      className="w-full h-full"
+                    />
+                  </div>
+                )}
+                
+                {viewMode === 'pdf' && pdfUrl && (
+                  <div className="bg-secondary/20 rounded-lg overflow-hidden border border-border/50 p-8 text-center">
+                    <FileText className="h-16 w-16 mx-auto mb-4 text-primary/50" />
+                    <h3 className="text-xl font-medium mb-2">PDF Document Available</h3>
+                    <p className="text-muted-foreground mb-6">
+                      View or download the PDF version of this story
+                    </p>
+                    <Button onClick={handleViewPdf}>
+                      <Download className="mr-2 h-4 w-4" />
+                      View PDF
+                    </Button>
+                  </div>
+                )}
               </div>
             </motion.div>
           </TabsContent>
           
-          {/* Characters Content */}
           <TabsContent value="characters">
             <motion.div 
               className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -331,7 +376,6 @@ const StoryDetail: React.FC = () => {
             </motion.div>
           </TabsContent>
           
-          {/* World Lore Content */}
           <TabsContent value="lore">
             <motion.div 
               className="space-y-8"

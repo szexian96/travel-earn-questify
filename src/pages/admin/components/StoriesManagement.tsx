@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
-import { Plus, Search, Filter, Edit, Trash, Eye, MoreHorizontal, ScrollText, ChevronDown } from 'lucide-react';
+import { Plus, Search, Filter, Edit, Trash, Eye, MoreHorizontal, ScrollText, ChevronDown, BookOpen, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -34,6 +34,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import StoryCreationForm from './StoryCreationForm';
+import StoryChapterManager from './StoryChapterManager';
 
 // Mock data for stories
 const mockStories = [
@@ -44,6 +45,8 @@ const mockStories = [
     descriptionEn: 'Discover the secrets of an ancient temple hidden in Kyoto\'s mountains.',
     descriptionJp: '京都の山々に隠された古代寺院の秘密を発見しよう。',
     thumbnailUrl: 'https://example.com/temple.jpg',
+    pdfUrlEn: 'https://example.com/temple-en.pdf',
+    pdfUrlJp: 'https://example.com/temple-jp.pdf',
     isPublished: true,
     chaptersCount: 5,
     createdAt: '2023-05-15T09:30:00Z'
@@ -55,6 +58,8 @@ const mockStories = [
     descriptionEn: 'Experience the vibrant nightlife of Tokyo\'s most exciting districts.',
     descriptionJp: '東京の最もエキサイティングな地区の活気ある夜の生活を体験しよう。',
     thumbnailUrl: 'https://example.com/tokyo.jpg',
+    pdfUrlEn: 'https://example.com/tokyo-en.pdf',
+    pdfUrlJp: 'https://example.com/tokyo-jp.pdf',
     isPublished: true,
     chaptersCount: 3,
     createdAt: '2023-06-20T14:15:00Z'
@@ -66,6 +71,8 @@ const mockStories = [
     descriptionEn: 'Journey through the snow-covered landscapes of Japan\'s northern island.',
     descriptionJp: '日本の北の島の雪に覆われた風景を旅しよう。',
     thumbnailUrl: 'https://example.com/hokkaido.jpg',
+    pdfUrlEn: '',
+    pdfUrlJp: '',
     isPublished: false,
     chaptersCount: 4,
     createdAt: '2023-07-05T11:45:00Z'
@@ -77,6 +84,7 @@ const StoriesManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreatingStory, setIsCreatingStory] = useState(false);
   const [isEditingStory, setIsEditingStory] = useState(false);
+  const [isManagingChapters, setIsManagingChapters] = useState(false);
   const [selectedStory, setSelectedStory] = useState<any>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [activeTab, setActiveTab] = useState('stories');
@@ -96,6 +104,11 @@ const StoriesManagement: React.FC = () => {
   const handleEditStory = (story: any) => {
     setSelectedStory(story);
     setIsEditingStory(true);
+  };
+
+  const handleManageChapters = (story: any) => {
+    setSelectedStory(story);
+    setIsManagingChapters(true);
   };
 
   const handleUpdateStory = (storyData: any) => {
@@ -138,9 +151,9 @@ const StoriesManagement: React.FC = () => {
             <ScrollText className="mr-2 h-4 w-4" />
             Stories
           </TabsTrigger>
-          <TabsTrigger value="characters" className="flex items-center">
-            <Eye className="mr-2 h-4 w-4" />
-            Characters
+          <TabsTrigger value="chapters" className="flex items-center">
+            <BookOpen className="mr-2 h-4 w-4" />
+            Chapters
           </TabsTrigger>
         </TabsList>
         
@@ -169,6 +182,7 @@ const StoriesManagement: React.FC = () => {
                       <TableHead className="w-[300px]">{t('admin.title')}</TableHead>
                       <TableHead>{t('admin.status')}</TableHead>
                       <TableHead>Chapters</TableHead>
+                      <TableHead>PDF</TableHead>
                       <TableHead>Created</TableHead>
                       <TableHead>{t('admin.actions')}</TableHead>
                     </TableRow>
@@ -176,7 +190,7 @@ const StoriesManagement: React.FC = () => {
                   <TableBody>
                     {filteredStories.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                        <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                           {t('admin.noData')}
                         </TableCell>
                       </TableRow>
@@ -214,6 +228,16 @@ const StoriesManagement: React.FC = () => {
                           </TableCell>
                           <TableCell>{story.chaptersCount}</TableCell>
                           <TableCell>
+                            {(story.pdfUrlEn || story.pdfUrlJp) ? (
+                              <Badge variant="outline" className="bg-secondary/50 flex items-center gap-1">
+                                <FileText className="h-3 w-3" />
+                                PDF
+                              </Badge>
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
                             {new Date(story.createdAt).toLocaleDateString()}
                           </TableCell>
                           <TableCell>
@@ -228,6 +252,10 @@ const StoriesManagement: React.FC = () => {
                                 <DropdownMenuItem onClick={() => handleEditStory(story)}>
                                   <Edit className="h-4 w-4 mr-2" />
                                   {t('admin.edit')}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleManageChapters(story)}>
+                                  <BookOpen className="h-4 w-4 mr-2" />
+                                  Manage Chapters
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => console.log('Preview story:', story)}>
                                   <Eye className="h-4 w-4 mr-2" />
@@ -254,17 +282,17 @@ const StoriesManagement: React.FC = () => {
           </Card>
         </TabsContent>
         
-        <TabsContent value="characters" className="space-y-4 mt-4">
+        <TabsContent value="chapters" className="space-y-4 mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Character Management</CardTitle>
+              <CardTitle>Chapter Management</CardTitle>
               <CardDescription>
-                Create and manage characters for your stories.
+                Create and manage chapters for your stories.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="py-20 text-center text-muted-foreground">
-                Character management features coming soon...
+                Select a story from the Stories tab to manage its chapters.
               </p>
             </CardContent>
           </Card>
@@ -298,6 +326,24 @@ const StoriesManagement: React.FC = () => {
             initialData={selectedStory}
             isEditing 
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Manage Chapters Dialog */}
+      <Dialog open={isManagingChapters} onOpenChange={setIsManagingChapters}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Manage Chapters</DialogTitle>
+            <DialogDescription>
+              Add, edit and organize chapters for this story.
+            </DialogDescription>
+          </DialogHeader>
+          {selectedStory && (
+            <StoryChapterManager
+              storyId={selectedStory.id}
+              storyTitle={language === 'en' ? selectedStory.titleEn : selectedStory.titleJp}
+            />
+          )}
         </DialogContent>
       </Dialog>
 
