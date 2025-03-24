@@ -280,7 +280,7 @@ const StoryCreationForm: React.FC<StoryCreationFormProps> = ({
                 <SelectValue placeholder="Select a related route" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">None</SelectItem>
+                <SelectItem value="none">None</SelectItem>
                 {mockRoutes.map(route => (
                   <SelectItem key={route.id} value={route.id}>
                     {language === 'en' ? route.nameEn : route.nameJp}

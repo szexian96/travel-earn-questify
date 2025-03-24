@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from '@/redux/hooks';
 import { addQuest, updateQuest, deleteQuest, Quest, QuestType, QuestTask, TaskType } from '@/redux/slices/questsSlice';
@@ -194,7 +193,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ task, index, onChange, language }) 
           />
         </div>
         
-        {/* Additional fields based on task type */}
         {task.type === 'trivia' && (
           <div className="space-y-2">
             <Label htmlFor={`task-${index}-choices`}>Multiple Choice Options (comma separated)</Label>
@@ -418,7 +416,6 @@ const QuestsManagement = () => {
 
   const handleSelectChange = (field: string, value: string) => {
     if (field === 'type') {
-      // When quest type changes, update the tasks
       const questType = value as QuestType;
       setTasks(DEFAULT_TASKS[questType].map(task => ({ ...task, id: `task-${Date.now()}-${Math.random().toString(36).substring(2, 9)}` })));
     }
@@ -665,7 +662,6 @@ const QuestsManagement = () => {
         </Table>
       </div>
 
-      {/* Add/Edit Quest Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -911,7 +907,6 @@ const QuestsManagement = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
