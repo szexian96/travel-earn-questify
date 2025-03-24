@@ -19,7 +19,8 @@ import {
   Sparkles,
   ScrollText,
   Compass,
-  Shield
+  Shield,
+  ShoppingBag
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -124,6 +125,14 @@ const Navbar: React.FC = () => {
             >
               {t('nav.explore')}
             </Link>
+            <Link 
+              to="/shop"
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                location.pathname.includes('/shop') ? 'text-primary' : 'text-foreground/80'
+              }`}
+            >
+              {t('nav.shop')}
+            </Link>
             {isAuthenticated && (
               <Link 
                 to="/passport"
@@ -188,6 +197,12 @@ const Navbar: React.FC = () => {
                     <Link to="/passport" className="flex cursor-pointer items-center">
                       <ScrollText className="mr-2 h-4 w-4" />
                       <span>{t('nav.passport')}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/shop" className="flex cursor-pointer items-center">
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      <span>{t('nav.shop')}</span>
                     </Link>
                   </DropdownMenuItem>
                   {isAdmin && (
@@ -289,6 +304,17 @@ const Navbar: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <Compass className="h-5 w-5" />
                   <span>{t('nav.explore')}</span>
+                </div>
+              </Link>
+              <Link 
+                to="/shop"
+                className={`p-2 rounded-md text-sm font-medium transition-colors hover:bg-secondary ${
+                  location.pathname.includes('/shop') ? 'text-primary' : 'text-foreground/80'
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  <ShoppingBag className="h-5 w-5" />
+                  <span>{t('nav.shop')}</span>
                 </div>
               </Link>
               {isAuthenticated && (

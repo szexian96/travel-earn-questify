@@ -18,9 +18,24 @@ import { useToast } from '@/hooks/use-toast';
 import StoryChaptersNav, { StoryChapter } from '@/components/StoryChaptersNav';
 import CharacterProfile, { Character } from '@/components/CharacterProfile';
 import WorldLoreEntry from '@/components/WorldLoreEntry';
-import type { WorldLoreEntryType } from '@/components/WorldLoreEntry';
 
-// Mock data for the story details
+interface WorldLoreEntryType {
+  id: string;
+  titleEn: string;
+  titleJp: string;
+  categoryEn: string;
+  categoryJp: string;
+  contentEn: string;
+  contentJp: string;
+  imageUrl: string;
+  relatedLocations: {
+    nameEn: string;
+    nameJp: string;
+    id: string;
+  }[];
+  tags: string[];
+}
+
 const mockStory = {
   id: '1',
   titleEn: 'The Lost Temple of Kyoto',
@@ -39,7 +54,6 @@ const mockStory = {
   updatedAt: '2023-07-10T14:20:00Z'
 };
 
-// Mock chapters data
 const mockChapters: StoryChapter[] = [
   {
     id: '1',
@@ -86,7 +100,6 @@ const mockChapters: StoryChapter[] = [
   }
 ];
 
-// Mock characters data
 const mockCharacters: Character[] = [
   {
     id: '1',
@@ -120,7 +133,6 @@ const mockCharacters: Character[] = [
   }
 ];
 
-// Mock world lore entries
 const mockWorldLore: WorldLoreEntryType[] = [
   {
     id: '1',
