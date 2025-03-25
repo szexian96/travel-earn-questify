@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, Award, Gift, Star, ScrollText, Map, Check, AlertCircle } from 'lucide-react';
+import { Trophy, Award, Gift, Star, ScrollText, Map, Check, AlertCircle, Wine, Mushroom, Utensils, Coffee, Leaf, Bike } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import {
@@ -24,7 +24,7 @@ const PERKS_DATA = [
     description: 'Get access to premium stories for 30 days',
     icon: <ScrollText size={24} />,
     pointsCost: 500,
-    category: 'content'
+    category: 'digital'
   },
   {
     id: '2',
@@ -32,7 +32,7 @@ const PERKS_DATA = [
     description: 'Unlock a special avatar frame for your profile',
     icon: <Award size={24} />,
     pointsCost: 300,
-    category: 'cosmetic'
+    category: 'digital'
   },
   {
     id: '3',
@@ -40,7 +40,7 @@ const PERKS_DATA = [
     description: 'Create and publish your own custom routes',
     icon: <Map size={24} />,
     pointsCost: 800,
-    category: 'feature'
+    category: 'digital'
   },
   {
     id: '4',
@@ -56,15 +56,55 @@ const PERKS_DATA = [
     description: 'Unlock an exclusive limited-time quest',
     icon: <Trophy size={24} />,
     pointsCost: 1000,
-    category: 'content'
+    category: 'digital'
   },
   {
     id: '6',
-    title: 'Profile Spotlight',
-    description: 'Get your profile featured on the explore page for a week',
-    icon: <Gift size={24} />,
-    pointsCost: 750,
-    category: 'feature'
+    title: 'Traditional Sake Set',
+    description: 'Handcrafted ceramic sake set from a local brewery',
+    icon: <Wine size={24} />,
+    pointsCost: 2500,
+    category: 'physical'
+  },
+  {
+    id: '7',
+    title: 'Gourmet Mushroom Growing Kit',
+    description: 'Grow your own shiitake and maitake mushrooms at home',
+    icon: <Mushroom size={24} />,
+    pointsCost: 1800,
+    category: 'physical'
+  },
+  {
+    id: '8',
+    title: 'Artisanal Tea Collection',
+    description: 'Selection of premium teas from local producers',
+    icon: <Coffee size={24} />,
+    pointsCost: 1500,
+    category: 'physical'
+  },
+  {
+    id: '9',
+    title: 'Local Farm Cooking Class',
+    description: 'Hands-on cooking class using local ingredients',
+    icon: <Utensils size={24} />,
+    pointsCost: 3000,
+    category: 'experience'
+  },
+  {
+    id: '10',
+    title: 'Botanical Garden Tour',
+    description: 'Guided tour of regional botanical gardens with a botanist',
+    icon: <Leaf size={24} />,
+    pointsCost: 2000,
+    category: 'experience'
+  },
+  {
+    id: '11',
+    title: 'City Bike Rental Pass',
+    description: '3-day bike rental pass to explore the city',
+    icon: <Bike size={24} />,
+    pointsCost: 1200,
+    category: 'experience'
   }
 ];
 
@@ -149,7 +189,7 @@ const Perks = () => {
         >
           <h1 className="text-3xl font-bold text-center mb-2">Perks Exchange</h1>
           <p className="text-muted-foreground text-center max-w-2xl">
-            Exchange your hard-earned points for exclusive perks and rewards to enhance your Tourii experience
+            Exchange your hard-earned points for exclusive perks, real-world items, and unique experiences
           </p>
         </motion.div>
         
@@ -210,7 +250,16 @@ const Perks = () => {
                 <CardDescription>{perk.description}</CardDescription>
               </CardHeader>
               <CardContent className="pb-2 flex-grow">
-                {/* Additional details could go here */}
+                {perk.category === 'physical' && (
+                  <div className="text-sm text-muted-foreground mt-2 bg-muted/50 p-2 rounded-md">
+                    <p>Physical item will be shipped to your registered address</p>
+                  </div>
+                )}
+                {perk.category === 'experience' && (
+                  <div className="text-sm text-muted-foreground mt-2 bg-muted/50 p-2 rounded-md">
+                    <p>Redeemable voucher will be sent to your email</p>
+                  </div>
+                )}
               </CardContent>
               <CardFooter className="pt-2">
                 <Button 

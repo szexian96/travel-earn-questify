@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Trophy, Gift, Award, Star, PlusCircle, Edit, Trash2, ScrollText, Map } from 'lucide-react';
+import { Trophy, Gift, Award, Star, PlusCircle, Edit, Trash2, ScrollText, Map, Wine, Mushroom, Utensils, Coffee, Leaf, Bike } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,7 +40,7 @@ const initialPerks = [
     description: 'Get access to premium stories for 30 days',
     icon: 'ScrollText',
     pointsCost: 500,
-    category: 'content',
+    category: 'digital',
     active: true
   },
   {
@@ -49,7 +49,7 @@ const initialPerks = [
     description: 'Unlock a special avatar frame for your profile',
     icon: 'Award',
     pointsCost: 300,
-    category: 'cosmetic',
+    category: 'digital',
     active: true
   },
   {
@@ -58,7 +58,7 @@ const initialPerks = [
     description: 'Create and publish your own custom routes',
     icon: 'Map',
     pointsCost: 800,
-    category: 'feature',
+    category: 'digital',
     active: true
   },
   {
@@ -69,6 +69,24 @@ const initialPerks = [
     pointsCost: 400,
     category: 'boost',
     active: false
+  },
+  {
+    id: '5',
+    title: 'Traditional Sake Set',
+    description: 'Handcrafted ceramic sake set from a local brewery',
+    icon: 'Wine',
+    pointsCost: 2500,
+    category: 'physical',
+    active: true
+  },
+  {
+    id: '6',
+    title: 'Gourmet Mushroom Growing Kit',
+    description: 'Grow your own shiitake and maitake mushrooms at home',
+    icon: 'Mushroom',
+    pointsCost: 1800,
+    category: 'physical',
+    active: true
   }
 ];
 
@@ -78,13 +96,19 @@ const iconOptions = [
   { value: 'Star', label: 'Star' },
   { value: 'Trophy', label: 'Trophy' },
   { value: 'ScrollText', label: 'Scroll Text' },
-  { value: 'Map', label: 'Map' }
+  { value: 'Map', label: 'Map' },
+  { value: 'Wine', label: 'Wine' },
+  { value: 'Mushroom', label: 'Mushroom' },
+  { value: 'Utensils', label: 'Utensils' },
+  { value: 'Coffee', label: 'Coffee' },
+  { value: 'Leaf', label: 'Leaf' },
+  { value: 'Bike', label: 'Bike' }
 ];
 
 const categoryOptions = [
-  { value: 'content', label: 'Content' },
-  { value: 'cosmetic', label: 'Cosmetic' },
-  { value: 'feature', label: 'Feature' },
+  { value: 'digital', label: 'Digital' },
+  { value: 'physical', label: 'Physical' },
+  { value: 'experience', label: 'Experience' },
   { value: 'boost', label: 'Boost' }
 ];
 
@@ -110,8 +134,14 @@ const PerksManagement = () => {
       case 'Gift': return <Gift />;
       case 'Star': return <Star />;
       case 'Trophy': return <Trophy />;
-      case 'ScrollText': return <ScrollText />; // This would require importing ScrollText
-      case 'Map': return <Map />; // This would require importing Map
+      case 'ScrollText': return <ScrollText />;
+      case 'Map': return <Map />;
+      case 'Wine': return <Wine />;
+      case 'Mushroom': return <Mushroom />;
+      case 'Utensils': return <Utensils />;
+      case 'Coffee': return <Coffee />;
+      case 'Leaf': return <Leaf />;
+      case 'Bike': return <Bike />;
       default: return <Gift />;
     }
   };
