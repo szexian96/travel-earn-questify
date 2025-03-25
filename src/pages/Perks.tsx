@@ -4,9 +4,17 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, Award, Gift, Star, ScrollText, Map } from 'lucide-react';
+import { Trophy, Award, Gift, Star, ScrollText, Map, Check, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 // Sample perks data - in a real app, this would come from an API
 const PERKS_DATA = [
@@ -64,6 +72,12 @@ const Perks = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isExchangeDialogOpen, setIsExchangeDialogOpen] = useState(false);
+  const [selectedPerk, setSelectedPerk] = useState(null);
+  const [exchangeStatus, setExchangeStatus] = useState<'confirming' | 'processing' | 'success' | 'error'>('confirming');
+
+  // For demo purposes, let's give the user some points if they don't have any
+  const userPoints = user?.points || 1000; // Default to 1000 points for demo
 
   const categories = Array.from(new Set(PERKS_DATA.map(perk => perk.category)));
   
@@ -71,7 +85,7 @@ const Perks = () => {
     ? PERKS_DATA.filter(perk => perk.category === selectedCategory)
     : PERKS_DATA;
 
-  const handleExchangePoints = (perk) => {
+  const handleOpenExchangeDialog = (perk) => {
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -81,22 +95,48 @@ const Perks = () => {
       return;
     }
 
-    if ((user?.points || 0) < perk.pointsCost) {
+    if (userPoints < perk.pointsCost) {
       toast({
         title: "Insufficient Points",
-        description: `You need ${perk.pointsCost - (user?.points || 0)} more points for this perk`,
+        description: `You need ${perk.pointsCost - userPoints} more points for this perk`,
         variant: "destructive"
       });
       return;
     }
 
-    // Here you would call an API to exchange points and grant the perk
-    // For now, we'll just show a success toast
-    toast({
-      title: "Perk Acquired!",
-      description: `You've successfully exchanged ${perk.pointsCost} points for ${perk.title}`,
-      variant: "default"
-    });
+    setSelectedPerk(perk);
+    setExchangeStatus('confirming');
+    setIsExchangeDialogOpen(true);
+  };
+
+  const handleExchangePoints = () => {
+    setExchangeStatus('processing');
+    
+    // Simulate API call
+    setTimeout(() => {
+      // Random success (80% chance) or error (20% chance) for demo purposes
+      const isSuccess = Math.random() < 0.8;
+      
+      if (isSuccess) {
+        setExchangeStatus('success');
+        
+        // Show success toast after dialog is closed
+        setTimeout(() => {
+          toast({
+            title: "Perk Acquired!",
+            description: `You've successfully exchanged ${selectedPerk.pointsCost} points for ${selectedPerk.title}`,
+          });
+        }, 1500);
+      } else {
+        setExchangeStatus('error');
+      }
+    }, 1500);
+  };
+
+  const handleCloseDialog = () => {
+    setIsExchangeDialogOpen(false);
+    // Reset status after animation completes
+    setTimeout(() => setExchangeStatus('confirming'), 300);
   };
 
   return (
@@ -116,7 +156,7 @@ const Perks = () => {
         {user && (
           <div className="mt-4 bg-primary/10 px-6 py-3 rounded-full">
             <span className="font-medium">Your balance: </span>
-            <span className="font-bold">{user.points || 0} points</span>
+            <span className="font-bold">{userPoints} points</span>
           </div>
         )}
       </div>
@@ -175,12 +215,12 @@ const Perks = () => {
               <CardFooter className="pt-2">
                 <Button 
                   className="w-full"
-                  onClick={() => handleExchangePoints(perk)}
-                  disabled={!user || (user?.points || 0) < perk.pointsCost}
+                  onClick={() => handleOpenExchangeDialog(perk)}
+                  disabled={!user || userPoints < perk.pointsCost}
                 >
                   {!user ? 'Sign in to Exchange' : 
-                    (user?.points || 0) < perk.pointsCost 
-                      ? `Need ${perk.pointsCost - (user?.points || 0)} more points` 
+                    userPoints < perk.pointsCost 
+                      ? `Need ${perk.pointsCost - userPoints} more points` 
                       : 'Exchange Points'}
                 </Button>
               </CardFooter>
@@ -188,6 +228,86 @@ const Perks = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Exchange Dialog */}
+      <Dialog open={isExchangeDialogOpen} onOpenChange={handleCloseDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          {exchangeStatus === 'confirming' && selectedPerk && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Confirm Exchange</DialogTitle>
+                <DialogDescription>
+                  Are you sure you want to exchange {selectedPerk.pointsCost} points for this perk?
+                </DialogDescription>
+              </DialogHeader>
+              <div className="my-6 p-4 border rounded-lg bg-background/50">
+                <div className="flex items-start gap-4">
+                  <div className="text-primary mt-1">{selectedPerk.icon}</div>
+                  <div>
+                    <h4 className="font-medium">{selectedPerk.title}</h4>
+                    <p className="text-sm text-muted-foreground">{selectedPerk.description}</p>
+                  </div>
+                </div>
+                <div className="mt-4 flex justify-between text-sm">
+                  <span>Current balance:</span>
+                  <span className="font-semibold">{userPoints} points</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Cost:</span>
+                  <span className="font-semibold text-orange-500">-{selectedPerk.pointsCost} points</span>
+                </div>
+                <div className="mt-2 pt-2 border-t flex justify-between">
+                  <span>New balance:</span>
+                  <span className="font-semibold">{userPoints - selectedPerk.pointsCost} points</span>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={handleCloseDialog}>Cancel</Button>
+                <Button onClick={handleExchangePoints}>Confirm Exchange</Button>
+              </DialogFooter>
+            </>
+          )}
+          
+          {exchangeStatus === 'processing' && (
+            <div className="py-8 flex flex-col items-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+              <DialogTitle className="text-center">Processing</DialogTitle>
+              <DialogDescription className="text-center">
+                Please wait while we process your exchange...
+              </DialogDescription>
+            </div>
+          )}
+          
+          {exchangeStatus === 'success' && (
+            <div className="py-8 flex flex-col items-center">
+              <div className="rounded-full h-12 w-12 bg-green-100 flex items-center justify-center mb-4">
+                <Check className="h-6 w-6 text-green-600" />
+              </div>
+              <DialogTitle className="text-center">Success!</DialogTitle>
+              <DialogDescription className="text-center mb-4">
+                You have successfully exchanged points for {selectedPerk?.title}.
+              </DialogDescription>
+              <Button onClick={handleCloseDialog}>Close</Button>
+            </div>
+          )}
+          
+          {exchangeStatus === 'error' && (
+            <div className="py-8 flex flex-col items-center">
+              <div className="rounded-full h-12 w-12 bg-red-100 flex items-center justify-center mb-4">
+                <AlertCircle className="h-6 w-6 text-red-600" />
+              </div>
+              <DialogTitle className="text-center">Exchange Failed</DialogTitle>
+              <DialogDescription className="text-center mb-4">
+                There was an error processing your exchange. Please try again.
+              </DialogDescription>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={handleCloseDialog}>Cancel</Button>
+                <Button onClick={handleExchangePoints}>Try Again</Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

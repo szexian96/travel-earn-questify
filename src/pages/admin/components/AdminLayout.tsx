@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { NavLink, useLocation, Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
@@ -31,13 +30,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { t } = useLanguage();
 
   const navItems = [
-    { path: '/admin', label: t('admin.dashboard'), icon: <LayoutDashboard size={20} /> },
-    { path: '/admin/quests', label: t('admin.quests'), icon: <Trophy size={20} /> },
-    { path: '/admin/stories', label: t('admin.stories'), icon: <ScrollText size={20} /> },
-    { path: '/admin/routes', label: t('admin.routes'), icon: <Map size={20} /> },
-    { path: '/admin/users', label: t('admin.users'), icon: <Users size={20} /> },
-    { path: '/admin/social', label: t('admin.social'), icon: <Share size={20} /> },
-    { path: '/admin/perks', label: t('admin.perks'), icon: <Gift size={20} /> },
+    { path: '/admin', label: t('nav.dashboard'), icon: <LayoutDashboard size={20} /> },
+    { path: '/admin/quests', label: t('nav.quests'), icon: <Trophy size={20} /> },
+    { path: '/admin/stories', label: t('nav.stories'), icon: <ScrollText size={20} /> },
+    { path: '/admin/routes', label: t('nav.routes'), icon: <Map size={20} /> },
+    { path: '/admin/users', label: t('nav.users'), icon: <Users size={20} /> },
+    { path: '/admin/social', label: t('nav.social'), icon: <Share size={20} /> },
+    { path: '/admin/perks', label: t('nav.perks'), icon: <Gift size={20} /> },
   ];
 
   const toggleSidebar = () => {
@@ -67,7 +66,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen bg-background">
-      {/* Desktop Sidebar */}
       <aside
         className={cn(
           "hidden md:flex flex-col border-r transition-all duration-300 ease-in-out",
@@ -87,18 +85,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <NavItem key={item.path} {...item} />
           ))}
           
-          {/* Return to Homepage Button - Desktop */}
           <Link 
             to="/"
             className="flex items-center gap-3 px-3 py-2 mt-4 rounded-md transition-colors text-primary hover:bg-secondary"
           >
             <Home size={20} />
-            {!sidebarCollapsed && <span>{t('admin.returnToHomepage')}</span>}
+            {!sidebarCollapsed && <span>{t('nav.returnToHome')}</span>}
           </Link>
         </nav>
       </aside>
 
-      {/* Mobile Header & Menu */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="h-16 border-b flex items-center px-4 justify-between">
           <div className="flex items-center">
@@ -114,7 +110,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </div>
           
           <div className="flex items-center gap-2">
-            {/* Return to Homepage Button - Mobile Header */}
             <Button variant="ghost" size="icon" asChild>
               <Link to="/">
                 <Home className="h-5 w-5" />
@@ -137,7 +132,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 <DropdownMenuItem asChild>
                   <Link to="/">
                     <Home className="mr-2 h-4 w-4" />
-                    <span>{t('admin.returnToHomepage')}</span>
+                    <span>{t('nav.returnToHome')}</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
@@ -153,7 +148,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </div>
         </header>
         
-        {/* Mobile Navigation Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden fixed inset-0 bg-background/80 backdrop-blur-sm z-50">
             <div className="fixed inset-y-0 left-0 w-3/4 max-w-xs bg-background shadow-lg p-4">
@@ -183,21 +177,19 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   </NavLink>
                 ))}
                 
-                {/* Return to Homepage Button - Mobile Menu */}
                 <Link
                   to="/"
                   className="flex items-center gap-3 px-3 py-3 mt-4 rounded-md transition-colors text-primary hover:bg-secondary"
                   onClick={toggleMobileMenu}
                 >
                   <Home size={20} />
-                  <span>{t('admin.returnToHomepage')}</span>
+                  <span>{t('nav.returnToHome')}</span>
                 </Link>
               </nav>
             </div>
           </div>
         )}
         
-        {/* Main Content */}
         <main className="flex-1 overflow-auto p-4 md:p-6">
           {children}
         </main>
