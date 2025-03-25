@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { NavLink, useLocation, Link } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ChevronsLeft, LayoutDashboard, Map, ScrollText, Users, MessageSquare, Bell, Settings, LogOut, MenuIcon, Share, Trophy, X, Home } from 'lucide-react';
+import { ChevronsLeft, LayoutDashboard, Map, ScrollText, Users, MessageSquare, Bell, Settings, LogOut, MenuIcon, Share, Trophy, X, Home, Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -37,6 +37,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { path: '/admin/routes', label: t('admin.routes'), icon: <Map size={20} /> },
     { path: '/admin/users', label: t('admin.users'), icon: <Users size={20} /> },
     { path: '/admin/social', label: t('admin.social'), icon: <Share size={20} /> },
+    { path: '/admin/perks', label: t('admin.perks'), icon: <Gift size={20} /> },
   ];
 
   const toggleSidebar = () => {

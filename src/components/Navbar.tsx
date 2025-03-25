@@ -1,4 +1,3 @@
-
 import type React from 'react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -19,7 +18,8 @@ import {
   Sparkles,
   ScrollText,
   Compass,
-  Shield
+  Shield,
+  Gift
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -123,6 +123,14 @@ const Navbar: React.FC = () => {
               }`}
             >
               {t('nav.explore')}
+            </Link>
+            <Link 
+              to="/perks"
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                location.pathname.includes('/perks') ? 'text-primary' : 'text-foreground/80'
+              }`}
+            >
+              {t('nav.perks')}
             </Link>
             {isAuthenticated && (
               <Link 
@@ -289,6 +297,17 @@ const Navbar: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <Compass className="h-5 w-5" />
                   <span>{t('nav.explore')}</span>
+                </div>
+              </Link>
+              <Link 
+                to="/perks"
+                className={`p-2 rounded-md text-sm font-medium transition-colors hover:bg-secondary ${
+                  location.pathname.includes('/perks') ? 'text-primary' : 'text-foreground/80'
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  <Gift className="h-5 w-5" />
+                  <span>{t('nav.perks')}</span>
                 </div>
               </Link>
               {isAuthenticated && (

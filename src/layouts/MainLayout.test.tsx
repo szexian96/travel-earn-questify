@@ -1,44 +1,70 @@
 
-import { render, screen, describe, test, expect } from '@/utils/test-utils';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import MainLayout from './MainLayout';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from '@/context/AuthContext';
+import { LanguageProvider } from '@/context/LanguageContext';
+
+// Mock the Navbar component to simplify testing
+jest.mock('@/components/Navbar', () => {
+  return function MockNavbar() {
+    return <div data-testid="navbar">Navbar</div>;
+  };
+});
 
 describe('MainLayout Component', () => {
   test('renders navbar', () => {
     render(
-      <MainLayout>
-        <div>Test Content</div>
-      </MainLayout>
+      <AuthProvider>
+        <LanguageProvider>
+          <BrowserRouter>
+            <MainLayout>
+              <div>Test Content</div>
+            </MainLayout>
+          </BrowserRouter>
+        </LanguageProvider>
+      </AuthProvider>
     );
     
-    // Check if the Questify logo in navbar is present
-    const logo = screen.getByText(/questify/i);
-    expect(logo).toBeInTheDocument();
+    expect(screen.getByTestId('navbar')).toBeInTheDocument();
   });
-
+  
   test('renders children', () => {
     render(
-      <MainLayout>
-        <div data-testid="test-content">Test Content</div>
-      </MainLayout>
+      <AuthProvider>
+        <LanguageProvider>
+          <BrowserRouter>
+            <MainLayout>
+              <div>Test Content</div>
+            </MainLayout>
+          </BrowserRouter>
+        </LanguageProvider>
+      </AuthProvider>
     );
     
-    const content = screen.getByTestId('test-content');
-    expect(content).toBeInTheDocument();
-    expect(content).toHaveTextContent('Test Content');
+    expect(screen.getByText('Test Content')).toBeInTheDocument();
+    expect(screen.getByText('Test Content')).toHaveTextContent('Test Content');
   });
-
-  test('has correct structure', () => {
+  
+  test('has the correct layout structure', () => {
     render(
-      <MainLayout>
-        <div>Test Content</div>
-      </MainLayout>
+      <AuthProvider>
+        <LanguageProvider>
+          <BrowserRouter>
+            <MainLayout>
+              <div>Test Content</div>
+            </MainLayout>
+          </BrowserRouter>
+        </LanguageProvider>
+      </AuthProvider>
     );
     
-    // Check if main element exists
+    // Check if the main element exists
     const mainElement = screen.getByRole('main');
     expect(mainElement).toBeInTheDocument();
     
-    // Check if the layout has the expected class structure
+    // Check if the main element has the right classes
     expect(mainElement).toHaveClass('flex-grow');
   });
 });
