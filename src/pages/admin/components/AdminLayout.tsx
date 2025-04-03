@@ -30,15 +30,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const { t } = useLanguage();
 
-  // Direct translation mapping for better readability
+  // Using simple labels instead of translation keys for better readability
   const navItems = [
-    { path: '/admin', icon: <LayoutDashboard size={20} />, label: t('admin.dashboard') },
-    { path: '/admin/quests', icon: <Trophy size={20} />, label: t('admin.quests') },
-    { path: '/admin/stories', icon: <ScrollText size={20} />, label: t('admin.stories') },
-    { path: '/admin/routes', icon: <Map size={20} />, label: t('admin.routes') },
-    { path: '/admin/users', icon: <Users size={20} />, label: t('admin.users') },
-    { path: '/admin/social', icon: <Share size={20} />, label: t('admin.social') },
-    { path: '/admin/perks', icon: <Gift size={20} />, label: t('admin.perks') },
+    { path: '/admin', icon: <LayoutDashboard size={20} />, label: 'Dashboard' },
+    { path: '/admin/quests', icon: <Trophy size={20} />, label: 'Quests' },
+    { path: '/admin/stories', icon: <ScrollText size={20} />, label: 'Stories' },
+    { path: '/admin/routes', icon: <Map size={20} />, label: 'Routes' },
+    { path: '/admin/users', icon: <Users size={20} />, label: 'Users' },
+    { path: '/admin/social', icon: <Share size={20} />, label: 'Social' },
+    { path: '/admin/perks', icon: <Gift size={20} />, label: 'Perks' },
   ];
 
   const toggleSidebar = () => {
@@ -92,7 +92,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             className="flex items-center gap-3 px-3 py-2 mt-4 rounded-md transition-colors text-primary hover:bg-secondary"
           >
             <Home size={20} />
-            {!sidebarCollapsed && <span>{t('admin.backToSite')}</span>}
+            {!sidebarCollapsed && <span>Back to Site</span>}
           </Link>
         </nav>
       </aside>
@@ -134,7 +134,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 <DropdownMenuItem asChild>
                   <Link to="/">
                     <Home className="mr-2 h-4 w-4" />
-                    <span>{t('admin.backToSite')}</span>
+                    <span>Back to Site</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
@@ -185,7 +185,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                   onClick={toggleMobileMenu}
                 >
                   <Home size={20} />
-                  <span>{t('admin.backToSite')}</span>
+                  <span>Back to Site</span>
                 </Link>
               </nav>
             </div>
