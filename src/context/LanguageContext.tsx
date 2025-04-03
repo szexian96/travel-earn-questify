@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Language = 'en' | 'jp';
@@ -78,7 +77,7 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.relatedRouteHelp': 'Connect this story to a model route or tourist spot for map integration.',
     'admin.tags': 'Tags',
     'admin.tagsHelp': 'Tags help users discover related content (e.g., Kyoto, Temples, Food)',
-
+    
     // Story System
     'story.chapters': 'Chapters',
     'story.characters': 'Characters',
@@ -90,7 +89,7 @@ const translations: Record<Language, Record<string, string>> = {
     'story.chapter': 'Chapter',
     'story.unlockChapter': 'Unlock Chapter',
     'story.lockedContent': 'Locked',
-
+    
     // Quests
     'quest.start': 'Start Quest',
     'quest.continue': 'Continue Quest',
@@ -107,7 +106,7 @@ const translations: Record<Language, Record<string, string>> = {
     'quest.inProgress': 'In Progress',
     'quest.notStarted': 'Not Started',
     'quest.taskCompleted': 'Task Completed',
-
+    
     // Passport
     'passport.title': 'Digital Passport',
     'passport.stamps': 'Hanko Stamps',
@@ -119,7 +118,7 @@ const translations: Record<Language, Record<string, string>> = {
     'passport.addToWallet': 'Add to Digital Wallet',
     'passport.share': 'Share Passport',
     'passport.downloadPDF': 'Download PDF Version',
-
+    
     // Authentication
     'auth.login': 'Login',
     'auth.register': 'Register',
@@ -136,7 +135,15 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.alreadyHaveAccount': 'Already have an account?',
     'auth.dontHaveAccount': 'Don\'t have an account?',
     'auth.agreeToTerms': 'By continuing, you agree to our Terms of Service and Privacy Policy',
-
+    
+    // Terms and Privacy
+    'terms.title': 'Legal Information',
+    'terms.subtitle': 'Please read our Terms of Service and Privacy Policy carefully',
+    'terms.termsTab': 'Terms of Service',
+    'terms.privacyTab': 'Privacy Policy',
+    'terms.lastUpdated': 'Last Updated:',
+    'terms.contactUs': 'Contact Us',
+    
     // General
     'app.languageEN': 'English',
     'app.languageJP': 'Japanese',
@@ -226,7 +233,7 @@ const translations: Record<Language, Record<string, string>> = {
     'admin.relatedRouteHelp': 'このストーリーをモデルルートや観光スポットに接続して、マップ統合を行います。',
     'admin.tags': 'タグ',
     'admin.tagsHelp': 'タグは関連コンテンツを発見するのに役立ちます（例：京都、寺院、料理）',
-
+    
     // Story System
     'story.chapters': '章',
     'story.characters': 'キャラクター',
@@ -238,7 +245,7 @@ const translations: Record<Language, Record<string, string>> = {
     'story.chapter': '章',
     'story.unlockChapter': '章を解除する',
     'story.lockedContent': 'ロック中',
-
+    
     // Quests
     'quest.start': 'クエスト開始',
     'quest.continue': 'クエスト続行',
@@ -255,7 +262,7 @@ const translations: Record<Language, Record<string, string>> = {
     'quest.inProgress': '進行中',
     'quest.notStarted': '未開始',
     'quest.taskCompleted': 'タスク完了',
-
+    
     // Passport
     'passport.title': 'デジタルパスポート',
     'passport.stamps': '判子スタンプ',
@@ -267,7 +274,7 @@ const translations: Record<Language, Record<string, string>> = {
     'passport.addToWallet': 'デジタルウォレットに追加',
     'passport.share': 'パスポートを共有',
     'passport.downloadPDF': 'PDF版をダウンロード',
-
+    
     // Authentication
     'auth.login': 'ログイン',
     'auth.register': '登録',
@@ -284,7 +291,15 @@ const translations: Record<Language, Record<string, string>> = {
     'auth.alreadyHaveAccount': 'すでにアカウントをお持ちですか？',
     'auth.dontHaveAccount': 'アカウントをお持ちでないですか？',
     'auth.agreeToTerms': '続行すると、利用規約とプライバシーポリシーに同意したことになります',
-
+    
+    // Terms and Privacy
+    'terms.title': '法的情報',
+    'terms.subtitle': '利用規約とプライバシーポリシーを注意深くお読みください',
+    'terms.termsTab': '利用規約',
+    'terms.privacyTab': 'プライバシーポリシー',
+    'terms.lastUpdated': '最終更新日:',
+    'terms.contactUs': 'お問い合わせ',
+    
     // General
     'app.languageEN': '英語',
     'app.languageJP': '日本語',
