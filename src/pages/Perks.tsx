@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, Award, Gift, Star, ScrollText, Map, Check, AlertCircle, Wine, Mushroom, Utensils, Coffee, Leaf, Bike } from 'lucide-react';
+import { Trophy, Award, Gift, Star, ScrollText, Map, Check, AlertCircle, Wine, Sprout, Utensils, Coffee, Leaf, Bike } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import {
@@ -70,7 +70,7 @@ const PERKS_DATA = [
     id: '7',
     title: 'Gourmet Mushroom Growing Kit',
     description: 'Grow your own shiitake and maitake mushrooms at home',
-    icon: <Mushroom size={24} />,
+    icon: <Sprout size={24} />,
     pointsCost: 1800,
     category: 'physical'
   },

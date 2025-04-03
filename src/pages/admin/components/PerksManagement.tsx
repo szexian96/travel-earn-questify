@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Trophy, Gift, Award, Star, PlusCircle, Edit, Trash2, ScrollText, Map, Wine, Mushroom, Utensils, Coffee, Leaf, Bike } from 'lucide-react';
+import { Trophy, Gift, Award, Star, PlusCircle, Edit, Trash2, ScrollText, Map, Wine, Sprout, Utensils, Coffee, Leaf, Bike } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -83,7 +82,7 @@ const initialPerks = [
     id: '6',
     title: 'Gourmet Mushroom Growing Kit',
     description: 'Grow your own shiitake and maitake mushrooms at home',
-    icon: 'Mushroom',
+    icon: 'Sprout',
     pointsCost: 1800,
     category: 'physical',
     active: true
@@ -98,7 +97,7 @@ const iconOptions = [
   { value: 'ScrollText', label: 'Scroll Text' },
   { value: 'Map', label: 'Map' },
   { value: 'Wine', label: 'Wine' },
-  { value: 'Mushroom', label: 'Mushroom' },
+  { value: 'Sprout', label: 'Sprout' },
   { value: 'Utensils', label: 'Utensils' },
   { value: 'Coffee', label: 'Coffee' },
   { value: 'Leaf', label: 'Leaf' },
@@ -137,7 +136,7 @@ const PerksManagement = () => {
       case 'ScrollText': return <ScrollText />;
       case 'Map': return <Map />;
       case 'Wine': return <Wine />;
-      case 'Mushroom': return <Mushroom />;
+      case 'Sprout': return <Sprout />;
       case 'Utensils': return <Utensils />;
       case 'Coffee': return <Coffee />;
       case 'Leaf': return <Leaf />;
@@ -191,7 +190,6 @@ const PerksManagement = () => {
   };
 
   const handleAddPerk = () => {
-    // Validate form
     if (!formData.title || !formData.description || !formData.icon || !formData.pointsCost || !formData.category) {
       toast({
         title: "Validation Error",
@@ -223,7 +221,6 @@ const PerksManagement = () => {
   };
 
   const handleUpdatePerk = () => {
-    // Validate form
     if (!formData.title || !formData.description || !formData.icon || !formData.pointsCost || !formData.category) {
       toast({
         title: "Validation Error",
